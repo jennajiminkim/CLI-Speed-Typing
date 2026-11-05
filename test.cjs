@@ -1,45 +1,9 @@
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const Engine = require('./dist/engine.js');
-let count = 0;
-const test = (name, fn) => {fn();count++;console.log('PASS '+name)};
-
-test('PERFECT and corrected GOOD combo', () => {
-  const e = new Engine(); e.start(0);
-  e.input('abc','abc'); assert.equal(e.submit('abc'),'perfect'); assert.equal(e.combo,1);
-  e.input('ax','abc');e.input('a','abc');e.input('abc','abc');
-  assert.equal(e.errors,1);assert.equal(e.submit('abc'),'good');assert.equal(e.combo,0);
-});
-test('Incorrect/incomplete input does not advance',()=>{
-  const e=new Engine(); e.start(0);e.input('ax','abc');
-  assert.equal(e.submit('abc'),false);assert.equal(e.index,0);
-});
-test('Scoring and accuracy arithmetic for distinct typing traces',()=>{
-  for(const trace of [['abc'],['x','','abc'],['abcx','abc'],['abx','ab','abc'],['a','axb','ab','abc']]){
-    const e=new Engine();e.start(0);for(const s of trace)e.input(s,'abc');
-    const before=e.errors;
-    assert.equal(e.submit('abc'),before?'good':'perfect');
-    const m=e.metrics(),expectedAccuracy=3/(3+before);
-    assert.equal(m.accuracy,expectedAccuracy);
-    assert.equal(m.cpm,3/1.5);
-    assert.equal(m.score,(3/1.5)*expectedAccuracy*expectedAccuracy);
-  }
-});
-test('Clock has no pause and stops at 90 seconds',()=>{
-  const e=new Engine();e.start(3000);
-  assert.equal(e.pause,undefined);assert.equal(e.resume,undefined);
-  assert.equal(e.seconds(53000),50);e.finish(103000);assert.equal(e.elapsed,90);
-});
-test('Unfinished command excluded at game end',()=>{
-  const e=new Engine();e.start(0);e.input('ab','abc');e.finish(90000);
-  assert.equal(e.chars,0);assert.equal(e.submit('abc'),false);
-});
-test('Countdown deadline and removed playback controls',()=>{
-  const js=fs.readFileSync('dist/app.js','utf8');
-  const html=fs.readFileSync('dist/index.html','utf8');
-  assert.match(js,/e.started=anchor\+3000/);
-  assert.match(js,/Date.now\(\)-wall/);
-  assert.doesNotMatch(js,/visibilitychange|\.pause\(|BAD/);
-  assert.doesNotMatch(html,/id="(?:pause|resume|stop)"/);
-});
-console.log(count+' suites passed');
+const assert=require('node:assert/strict'),fs=require('node:fs');const Engine=require('./dist/engine.js');let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS '+name)};
+test('Perfect and corrected GOOD combo',()=>{const e=new Engine();e.start(0);e.input('abc','abc');assert.equal(e.submit('abc'),'perfect');assert.equal(e.combo,1);e.input('ax','abc');e.input('a','abc');e.input('abc','abc');assert.equal(e.errors,1);assert.equal(e.submit('abc'),'good');assert.equal(e.combo,0)});
+test('Incorrect/incomplete input does not advance',()=>{const e=new Engine();e.start(0);e.input('ax','abc');assert.equal(e.submit('abc'),false);assert.equal(e.index,0)});
+test('Existing score and accuracy formulas remain unchanged',()=>{for(const trace of [['a','ab','abc'],['x','','abc'],['abcx','abc'],['abx','ab','abc'],['a','axb','ab','abc']]){const e=new Engine();e.start(0);for(let k=0;k<3;k++){for(const s of trace)e.input(s,'abc');e.submit('abc');const m=e.metrics(),accuracy=e.chars+e.errors?e.chars/(e.chars+e.errors):1,cpm=e.chars/1.5;assert.equal(m.accuracy,accuracy);assert.equal(m.cpm,cpm);assert.equal(m.score,cpm*accuracy*accuracy)}}});
+test('Elapsed stopwatch continues beyond 90 seconds and stops on finish',()=>{const e=new Engine();e.start(3000);assert.equal(e.pause,undefined);assert.equal(e.resume,undefined);assert.equal(e.seconds(53000),50);assert.equal(e.seconds(123000),120);e.finish(123000);assert.equal(e.elapsed,120);assert.equal(e.seconds(183000),120)});
+test('Unfinished command excluded',()=>{const e=new Engine();e.start(0);e.input('ab','abc');e.finish(90000);assert.equal(e.chars,0);assert.equal(e.submit('abc'),false)});
+test('Fixed speedrun dataset contains 10 commands in 3/4/3 difficulty split',()=>{const js=fs.readFileSync('dist/app.js','utf8'),rows=[...js.matchAll(/\['(EASY|NORMAL|HARD)','([^']+)'\]/g)].map(x=>x[1]);assert.equal(rows.length,10);assert.deepEqual(rows.reduce((a,x)=>(a[x]++,a),{EASY:0,NORMAL:0,HARD:0}),{EASY:3,NORMAL:4,HARD:3})});
+test('Ten exact submissions complete once and elapsed time keeps moving during typo correction',()=>{const js=fs.readFileSync('dist/app.js','utf8'),bank=[...js.matchAll(/\['(EASY|NORMAL|HARD)','([^']+)'\]/g)].map(x=>x[2]),e=new Engine();e.start(3000);for(const command of bank){e.input(command.slice(0,-1)+'x',command);const before=e.seconds(5000);e.input(command,command);assert.ok(e.seconds(6000)>before);assert.equal(e.submit(command),'good')}assert.equal(e.index,10);e.finish(17000);assert.equal(e.status,'finished');assert.equal(e.elapsed,14);assert.equal(e.combo,0)});
+test('Countdown, completion-only best time, and real ghost availability labels',()=>{const js=fs.readFileSync('dist/app.js','utf8'),h=fs.readFileSync('dist/index.html','utf8');assert.match(js,/e\.started=anchor\+3000/);assert.match(js,/Date\.now\(\)-wall/);assert.match(js,/e\.index===bank\.length/);assert.match(js,/e\.elapsed<best/);assert.match(js,/cli-speedrun-best-v1/);assert.doesNotMatch(js,/visibilitychange|\.pause\(|3\.2|BAD/);assert.match(h,/TIME ELAPSED/);assert.match(h,/TODAY'S LEADER · UNAVAILABLE/);assert.doesNotMatch(h,/90 SEC|가상 고스트/);assert.doesNotMatch(h,/id="(?:pause|resume|stop)"/)});console.log(count+' suites passed');
