@@ -1,35 +1,39 @@
-# CLI Speed Typing — UI revision v1.1
+# CLI Speed Typing — Speedrun Playtest
 
-Existing private playtest, revised 2026-11-05. This is not a server-verified Daily Challenge.
+A browser-based network-topology typing game. **This repository contains a public-safe local playtest, not a shared official ranked service.**
+
+## Play the current version
+- Live: https://cli-speed-typing.vercel.app/
+- Public source: https://github.com/jennajiminkim/CLI-Speed-Typing
 
 ## Implemented
-- Reference-based 70/30 topology lobby, isometric reusable SVG devices, Light/Night composition.
-- Fixed SCORE / ACCURACY / COMBO / JUDGMENT HUD; READY, PERFECT, GOOD, ERROR.
-- Error state temporarily overrides last completed judgment. Correcting an error restores the last completed judgment; typo history remains for GOOD eligibility.
-- PERFECT increases combo. GOOD resets combo. Exact Enter only advances.
-- 3-second countdown, then 90 seconds. No pause API, controls or visibility pause.
-- Deadline uses elapsed monotonic and wall time, whichever advances farther. Delayed countdown callbacks do not postpone the start. This is a client clock, not anti-cheat authority.
-- Exit confirmation keeps timer running; aborted rounds never update local best. Refresh discards active round, with no score write.
-- Original score and accuracy formula preserved: completed chars / 1.5 × (completed chars / (completed chars + errors))².
-- Motion reduction disables animations/transitions. No asynchronous judgment reset callbacks.
+- Fixed sequence of 10 fictional test commands (Easy 3, Normal 4, Hard 3).
+- Three-second countdown followed by an unlimited elapsed-time stopwatch.
+- Exactly matching each command and pressing Enter advances the run. The tenth completed command freezes the result time.
+- Typing mistakes can be corrected; the timer continues during correction.
+- PERFECT / GOOD / ERROR, combo, score and accuracy are retained as gameplay feedback. **The ranking criterion is fastest completion time, not score.**
+- Fastest completed attempt is stored in the same browser, separately for each Seoul-local calendar date. Aborted runs and practice attempts do not count.
+- Light/Night network topology; local responsive desktop layout; readable monospaced CLI input; 21px Ghost-panel spacing at desktop dimensions.
+- The Ghost panel deliberately shows **no verified leader** because this static version has no shared leaderboard.
 
-## Existing limitations retained
-- Twelve fictional sample phrases; not the private CLI dataset.
-- ROUTING fixed. Daily domain rotation is not implemented in the original playtest.
-- Local best only. No friend leaderboard, server start verification, per-user account system, Boss Command or Command Collection.
-- Ghost is a clearly labeled synthetic 3.2 chars/sec comparison, not today's actual leader.
-- Hosting remains owner-private; private training data is excluded from source and static deployment.
-- SVG equipment is a reproduction in code, not pixel-identical artwork. Original 5x7 pixel glyphs differ from the unnamed reference typeface.
+## Not yet implemented
+No server authentication, friend leaderboard, authoritative ranking, anti-cheat verification, real leader Ghost timeline, Boss Command, command archive, or daily rotating command bank. The game uses fictional demo strings, **not real private course CLI data**.
 
-## Files
-- dist/index.html: lobby, HUD, input, race, countdown, result and exit dialog structure.
-- dist/app.js: reusable SVG shapes, topology placement and existing browser UI controller.
-- dist/engine.js: exact original input/scoring behavior; removed pause/resume API.
-- dist/style.css: reference proportions, theme tokens, fixed judgment slot, responsive layout and reduced motion.
-- dist/pixel.ttf and dist/FONT-LICENSE.txt: project-created glyphs, MIT license and web embedding metadata.
-- test.cjs: six self-contained behavior/regression suites (no prior Git history required).
+## Run locally
+Open a local static server from the project directory (e.g. `python3 -m http.server 8000 --directory dist`) and visit `http://localhost:8000`.
 
-Run `node test.cjs` from this checkout. Browser validation uses the normal interface; no gameplay test override is shipped.
+Tests (Node.js):
+- `node test.cjs` — 8 regression suites
+- `node qa-speedrun.cjs` — 5 integration scenarios
 
-## Public repository note
-This repository contains the static public-safe playtest, **not** the complete planned CLI game. No authenticated friend leaderboard, authoritative anti-cheat service, private course dataset, or user accounts are implemented. Do not treat the fictional prompts as verified executable CLI commands.
+## Deployment
+Vercel framework: **Other**; Root Directory: `./`; Output Directory: `dist`. The `dist/index.html` file is the entrypoint.
+
+## Font credits
+- **DOSGothic** / DOS font by **leedheo**; the author documents MIT licensing and requests attribution. Original project: https://github.com/hurss/fonts
+- **DungGeunMo (둥근모꼴)** by **orioncactus (길형진)**; described as Public Domain. Reference: https://noonnu.cc/font_page/250
+
+The public Vercel version loads compatible webfont distributions through the Noonnu/jsDelivr CDN in `dist/style.css`. The original large TTF files from the private Work package have **not** been duplicated into this public repository. These externally hosted fonts may differ slightly from the user-supplied TTF files and require network access.
+
+## Submission status
+Second-checkpoint build; implementation and automated logic tests are done, but this is not a completed production multiplayer game.
