@@ -1,0 +1,15 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+let ms=0,base=Date.parse('2026-11-05T12:00:00Z'),tick;const store=new Map(),nodes=new Map();
+function el(){return {dataset:{},style:{},hidden:false,open:false,value:'',classList:{toggle(){}},setAttribute(){},addEventListener(k,fn){this[k]=fn},append(){},replaceChildren(){},replaceWith(){},focus(){},showModal(){this.open=true},close(){this.open=false},querySelector(){return el()},get parentElement(){return nodes.get('slot')||el()}}}
+const $=id=>{if(!nodes.has(id))nodes.set(id,el());return nodes.get(id)};
+class ClockDate extends Date{constructor(...a){super(...(a.length?a:[base+ms]))}static now(){return base+ms}}
+const c=vm.createContext({console,Date:ClockDate,Intl,performance:{now:()=>ms},setInterval:fn=>tick=fn,window:{scrollTo(){}},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},document:{getElementById:$,createElement:el,createDocumentFragment:el,head:el(),body:el(),querySelector:el}});
+vm.runInContext(fs.readFileSync('dist/engine.js','utf8'),c);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),c);vm.runInContext('init()',c);
+const commands=vm.runInContext('bank.map(x=>x[1])',c);function advance(n){ms+=n;tick()}function input(v){$('typing').value=v;$('typing').input({target:$('typing')})}function enter(){ $('typing').keydown({key:'Enter',preventDefault(){}})}
+function start(practice=false){$(practice?'practice':'start').onclick();assert.equal($('typing').disabled,true);advance(2999);assert.equal($('time').textContent,'00:00.00');advance(1);assert.equal($('typing').disabled,false)}
+function run(step){start();commands.forEach(cmd=>{advance(step);input(cmd);enter()})}
+run(1000);assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'10');const final=$('finalScore').textContent;advance(10000);assert.equal($('finalScore').textContent,final);console.log('PASS countdown and tenth-submit frozen completion');
+run(2000);assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'10');run(500);assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'5');console.log('PASS faster-only best persistence');
+start();input('x');assert.equal($('feedback').textContent,'ERROR');const old=$('time').textContent;advance(2000);assert.notEqual($('time').textContent,old);input(commands[0]);enter();assert.equal($('feedback').textContent,'GOOD');assert.equal($('combo').textContent,'×0');input(commands[1]);enter();assert.equal($('feedback').textContent,'PERFECT');assert.equal($('combo').textContent,'×1');$('confirmExit').onclick();assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'5');console.log('PASS typo clock, GOOD/PERFECT combo and abandoned exclusion');
+start(true);commands.forEach(cmd=>{advance(100);input(cmd);enter()});assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'5');console.log('PASS practice excluded');
+base+=86400000;run(700);assert.equal(store.get('cli-speedrun-best-v1:2026-11-06'),'7');assert.equal(store.get('cli-speedrun-best-v1:2026-11-05'),'5');console.log('PASS midnight without reload uses separate date key');
