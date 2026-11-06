@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 230 305">
+  <!-- Generator: Adobe Illustrator 30.8.2, SVG Export Plug-In . SVG Version: 2.1.4 Build 7)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: url(#_무제_그라디언트);
+      }
+
+      .st1 {
+        fill: #0c192d;
+        stroke: #b0e5ff;
+        stroke-width: 1.9px;
+      }
+
+      .st2, .st3 {
+        stroke: #ace6ff;
+        stroke-width: 2.1px;
+      }
+
+      .st2, .st3, .st4, .st5 {
+        stroke-linejoin: round;
+      }
+
+      .st2, .st6 {
+        fill: none;
+      }
+
+      .st3 {
+        fill: url(#_무제_그라디언트_3);
+      }
+
+      .st3, .st6 {
+        stroke-linecap: round;
+      }
+
+      .st7 {
+        fill: url(#_무제_그라디언트_2);
+      }
+
+      .st4 {
+        fill: #00ed4b;
+        stroke: #008b3d;
+        stroke-width: .65px;
+      }
+
+      .st6 {
+        stroke: #71d9ff;
+        stroke-width: 2.15px;
+      }
+
+      .st5 {
+        fill: #eaf8ff;
+        stroke: #9bdbff;
+        stroke-width: .35px;
+      }
+
+      .st8 {
+        fill: #1e395e;
+        isolation: isolate;
+        opacity: .75;
+      }
+    </style>
+    <linearGradient id="_무제_그라디언트" data-name="무제 그라디언트" x1="-842.57" y1="693.71" x2="-841.57" y2="693.71" gradientTransform="translate(75868 139594) scale(90 -201)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#11233c"/>
+      <stop offset="1" stop-color="#0e1c32"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_2" data-name="무제 그라디언트 2" x1="-842.13" y1="694.22" x2="-841.14" y2="693.23" gradientTransform="translate(58234 138902) scale(69 -200)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#182b48"/>
+      <stop offset="1" stop-color="#101e35"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_3" data-name="무제 그라디언트 3" x1="-843.21" y1="696.24" x2="-842.17" y2="695.2" gradientTransform="translate(134104 52931) scale(159 -76)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#213555"/>
+      <stop offset="1" stop-color="#172945"/>
+    </linearGradient>
+  </defs>
+  <g id="linux-server-ground-shadows">
+    <path id="ground-shadow-plane" class="st8" d="M12,232l100-53,110,48-100,53L12,232Z"/>
+  </g>
+  <g id="linux-server-chassis">
+    <path id="linux-server-front" class="st0" d="M37,58l90,38v163c-2,0-4-.21-6-1l-78-31c-4-1.33-6-4-6-8V58Z"/>
+    <path id="linux-server-side" class="st7" d="M127,96l69-40v159c0,3.33-1.67,6-5,8l-58,34c-2,1.07-4,2-6,2V96Z"/>
+    <path id="linux-server-top" class="st3" d="M41,54L107,19c2.67-1.33,5.33-1.33,8,0l76,33c2.67,1.33,4.33,2.67,5,4l-69,40L37,58c0-1.33,1.33-2.67,4-4Z"/>
+    <path id="linux-server-outer-contour" class="st2" d="M37,58v161c0,4,2,6.67,6,8l78,31c2,.79,4,1,6,1s4-.93,6-2l58-34c3.33-2,5-4.67,5-8V56M127,96v163"/>
+  </g>
+  <g id="linux-server-panels">
+    <path id="server-panel-1" class="st1" d="M46,70.84l70,29.56c2,.84,3,2.27,3,4.27v17c0,2-1,2.58-3,1.73l-70-29.56c-1.33-.56-2-1.84-2-3.84v-17c0-2,.67-2.72,2-2.16Z"/>
+    <path id="server-panel-2" class="st1" d="M46,102.09l70,29.56c2,.84,3,2.27,3,4.27v17c0,2-1,2.58-3,1.73l-70-29.56c-1.33-.56-2-1.84-2-3.84v-17c0-2,.67-2.72,2-2.16Z"/>
+    <path id="server-panel-3" class="st1" d="M46,133.34l70,29.56c2,.84,3,2.27,3,4.27v17c0,2-1,2.58-3,1.73l-70-29.56c-1.33-.56-2-1.84-2-3.84v-17c0-2,.67-2.72,2-2.16Z"/>
+    <path id="server-panel-4" class="st1" d="M46,164.59l70,29.56c2,.84,3,2.27,3,4.27v17c0,2-1,2.58-3,1.73l-70-29.56c-1.33-.56-2-1.84-2-3.84v-17c0-2,.67-2.72,2-2.16Z"/>
+    <path id="server-panel-5" class="st1" d="M46,195.84l70,29.56c2,.84,3,2.27,3,4.27v16c0,2-1,2.58-3,1.73l-70-28.56c-1.33-.56-2-1.84-2-3.84v-17c0-2,.67-2.72,2-2.16Z"/>
+  </g>
+  <g id="linux-server-front-slots">
+    <path class="st5" d="M52.5,79l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M60,82.17l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M67.5,85.33l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M75,88.5l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M82.5,91.67l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M52.5,110.25l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M60,113.42l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M67.5,116.58l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M75,119.75l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M82.5,122.92l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M52.5,141.5l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M60,144.67l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M67.5,147.83l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M75,151l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M82.5,154.17l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M52.5,172.75l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M60,175.92l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M67.5,179.08l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M75,182.25l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M82.5,185.42l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M52.5,204l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M60,207.17l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M67.5,210.33l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M75,213.5l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+    <path class="st5" d="M82.5,216.67l2.4,1.01v9.3l-2.4-1.01v-9.3Z"/>
+  </g>
+  <g id="linux-server-leds">
+    <circle class="st4" cx="93.3" cy="100.5" r="2"/>
+    <path class="st4" d="M106.5,104.4l4.4,1.86v4.6l-4.4-1.86v-4.6Z"/>
+    <circle class="st4" cx="93.3" cy="131.75" r="2"/>
+    <path class="st4" d="M106.5,135.65l4.4,1.86v4.6l-4.4-1.86v-4.6Z"/>
+    <circle class="st4" cx="93.3" cy="163" r="2"/>
+    <path class="st4" d="M106.5,166.9l4.4,1.86v4.6l-4.4-1.86v-4.6Z"/>
+    <circle class="st4" cx="93.3" cy="194.25" r="2"/>
+    <path class="st4" d="M106.5,198.15l4.4,1.86v4.6l-4.4-1.86v-4.6Z"/>
+    <circle class="st4" cx="93.3" cy="225.5" r="2"/>
+    <path class="st4" d="M106.5,229.4l4.4,1.86v4.6l-4.4-1.86v-4.6Z"/>
+  </g>
+  <g id="linux-server-vents">
+    <path class="st6" d="M142,110l40-24M142,119l40-24M142,128l40-24M142,137l40-24M142,187l40-24M142,196l40-24M142,205l40-24M142,214l40-24"/>
+  </g>
+</svg>

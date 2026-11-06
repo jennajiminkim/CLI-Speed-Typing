@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 260 180">
+  <!-- Generator: Adobe Illustrator 30.8.2, SVG Export Plug-In . SVG Version: 2.1.4 Build 7)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #081b32;
+        stroke: #64c8ff;
+        stroke-width: 1.1px;
+      }
+
+      .st1 {
+        fill: url(#_무제_그라디언트);
+      }
+
+      .st1, .st2, .st3, .st4, .st5 {
+        stroke-linecap: round;
+      }
+
+      .st1, .st6, .st3, .st4, .st5, .st7 {
+        stroke-linejoin: round;
+      }
+
+      .st1, .st3, .st4, .st5 {
+        stroke: #a8e5ff;
+        stroke-width: 2.1px;
+      }
+
+      .st2 {
+        stroke: #7edcfc;
+        stroke-width: 1.8px;
+      }
+
+      .st2, .st5 {
+        fill: none;
+      }
+
+      .st6 {
+        fill: #00ed64;
+        stroke: #008c57;
+        stroke-width: .8px;
+      }
+
+      .st3 {
+        fill: url(#_무제_그라디언트_2);
+      }
+
+      .st4 {
+        fill: url(#_무제_그라디언트_3);
+      }
+
+      .st8 {
+        fill: #183a5d;
+        stroke-width: .5px;
+      }
+
+      .st8, .st7 {
+        stroke: #b6e8ff;
+      }
+
+      .st9 {
+        fill: #1d385c;
+        isolation: isolate;
+        opacity: .75;
+      }
+
+      .st7 {
+        fill: #e5f6ff;
+        stroke-width: .55px;
+      }
+    </style>
+    <linearGradient id="_무제_그라디언트" data-name="무제 그라디언트" x1="-1631.09" y1="8.27" x2="-1630.07" y2="9.29" gradientTransform="translate(96259 -507.9775) scale(59 70.5714)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1c304f"/>
+      <stop offset="1" stop-color="#142640"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_2" data-name="무제 그라디언트 2" x1="-1647.34" y1="5.77" x2="-1646.34" y2="6.77" gradientTransform="translate(245538 -538) scale(149 101)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101c31"/>
+      <stop offset="1" stop-color="#0b1527"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_3" data-name="무제 그라디언트 3" x1="-1650.35" y1="6.34" x2="-1649.34" y2="7.34" gradientTransform="translate(341782.0694 -569) scale(207.0833 92)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#233858"/>
+      <stop offset="1" stop-color="#172a48"/>
+    </linearGradient>
+  </defs>
+  <g id="switch-shadow">
+    <path class="st9" d="M5.03,125.48L179.8,53l73.33,39.82-167.18,72.24L5.03,125.48Z"/>
+  </g>
+  <g>
+    <path id="switch-chassis-side" class="st1" d="M25,75l59,31v36c0,3.33,3.46,6.48-4,3l-49-23c-4-2-6-5-6-9v-38Z"/>
+    <path id="switch-chassis-front" class="st3" d="M84,106l149-61v33c0,4.67-1.67,7.67-5,9l-138,58c-4.88,2.21-7.01,1.92-6,.57v-39.57Z"/>
+    <path id="switch-chassis-top" class="st4" d="M29,71L166,15c2.67-1.33,5.33-1.33,8,0l54,27c2.67,1.33,4.33,2.33,5,3l-145,60c-2.67,1.33-5.33,1.33-8,0l-52.31-26.14c-5.16-3.15-1.9-6.64,1.31-7.86Z"/>
+    <path class="st5" d="M84,109v33"/>
+  </g>
+  <g id="switch-ethernet-ports">
+    <g id="switch-port-1">
+      <path class="st0" d="M93,117l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M94.7,118l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M95.5,118.98l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.07v-9h0Z"/>
+    </g>
+    <g id="switch-port-2">
+      <path class="st0" d="M110.25,109.94l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M111.95,110.94l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M112.75,111.91l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.06s0-9,0-9Z"/>
+    </g>
+    <g id="switch-port-3">
+      <path class="st0" d="M127.5,102.88l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M129.2,103.88l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M130,104.85l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.06s0-9,0-9Z"/>
+    </g>
+    <g id="switch-port-4">
+      <path class="st0" d="M144.75,95.81l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M146.45,96.82l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M147.25,97.79l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.06s0-9,0-9Z"/>
+    </g>
+    <g id="switch-port-5">
+      <path class="st0" d="M162,88.75l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M163.7,89.76l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M164.5,90.73l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.06s0-9,0-9Z"/>
+    </g>
+    <g id="switch-port-6">
+      <path class="st0" d="M179.25,81.69l15.5-6.35v16l-15.5,6.35v-16Z"/>
+      <path class="st8" d="M180.95,82.69l12.1-4.95v12.6l-12.1,4.95v-12.6Z"/>
+      <path class="st7" d="M181.75,83.67l9-3.68,1.6.35v8l-3.4,1.39v2l-4.6,1.88v-2l-2.6,1.06s0-9,0-9Z"/>
+    </g>
+  </g>
+  <g id="switch-status-leds">
+    <path class="st6" d="M204,75.5l4.5-1.84v5.3l-4.5,1.84v-5.3Z"/>
+    <path class="st6" d="M212.6,71.98l4.5-1.84v5.3l-4.5,1.84v-5.3Z"/>
+    <path class="st6" d="M221.2,68.46l4.5-1.84v5.3l-4.5,1.84v-5.3Z"/>
+  </g>
+  <g id="switch-side-vents">
+    <path class="st2" d="M36,94l21,10M36,99l21,10M36,104l21,10M36,109l21,10"/>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="175" height="175" viewBox="0 0 175 175" preserveAspectRatio="xMidYMid meet">
+<title>INTERNET — Night</title>
+<desc>New editable geometry reconstructed from reference_home_light PNG crop at 750,320; no prior SVG geometry used. Topology leads are intentionally outside this asset.</desc>
+<defs><radialGradient id="internet-surface-paint" cx="0.35" cy="0.30" r="0.80"><stop offset="0" stop-color="#101e33"/><stop offset="1" stop-color="#101627"/></radialGradient></defs>
+<g id="internet-ground-shadows">
+<path id="internet-ground-block" d="M1 132L76 95 166 125 90 169Z" fill="#203b66"/>
+</g>
+<g id="internet-surface">
+<ellipse id="internet-surface-fill" cx="84" cy="74.5" rx="65" ry="65" fill="url(#internet-surface-paint)"/>
+</g>
+<g id="internet-grid">
+<path id="internet-meridian-west" d="M85 10C57 15 36 46 37.5 78C36 106 55 131 82 139" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-inner-west" d="M85 10C73 24 66 50 65 78C64 109 71 132 82 139" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-inner-east" d="M85 10C98 23 104 52 103 78C104 110 94 134 82 139" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-east" d="M85 10C112 16 133 46 132 78C133 107 109 134 82 139" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-upper" d="M36.1 31.3C46 54 121 55 132 31.3" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-middle-upper" d="M21.1 58C43 84 121 84 146.9 58" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-middle-lower" d="M20.7 89.3C48 109 120 109.7 147.3 89.3" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-lower" d="M37.6 120C61 128 108 130 130.4 120" fill="none" stroke="#30caff" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-polar-latitude" d="M57.5 16.5C68 28 99 30 110.3 17.1" fill="none" stroke="#30caff" stroke-width="1.05" opacity="0.26" stroke-linecap="butt"/>
+</g>
+<g id="internet-outer-contour">
+<ellipse id="internet-outline" cx="84" cy="74.5" rx="65" ry="65" fill="none" stroke="#00baff" stroke-width="1.7"/>
+</g>
+</svg>

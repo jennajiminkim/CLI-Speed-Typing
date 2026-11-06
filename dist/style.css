@@ -157,3 +157,89 @@ aside h1{font-size:calc(clamp(48px,4.55vw,73px) + 14pt)}
   .target { font-size: 19px; line-height: 1.35; height: 2.7em; min-height: 2.7em; }
   #typing { font-size: 19px; min-height: 55px; }
 }
+
+/* Home Router only: keep original footprint, use one shared SVG geometry. */
+#homeMap .router.equipment{filter:none}
+#homeMap .homeRouterNight{display:none}
+body.night #homeMap .homeRouterLight{display:none}
+body.night #homeMap .homeRouterNight{display:inline}
+
+/* Home Switch only; independent theme assets keep the same geometry. */
+#homeMap .homeSwitch.equipment{filter:none}
+#homeMap .homeSwitchNight{display:none}
+body.night #homeMap .homeSwitchLight{display:none}
+body.night #homeMap .homeSwitchNight{display:inline}
+
+/* Home Linux Server only: its own geometry and ground plane. */
+#homeMap .homeLinuxServer.equipment{filter:none}
+#homeMap .homeLinuxServerNight{display:none}
+body.night #homeMap .homeLinuxServerLight{display:none}
+body.night #homeMap .homeLinuxServerNight{display:inline}
+/* Home Client: same asset geometry in both themes. */
+#homeMap .homeClient.equipment{filter:none}
+#homeMap .homeClientNight{display:none}
+body.night #homeMap .homeClientLight{display:none}
+body.night #homeMap .homeClientNight{display:inline}
+
+/* Reconstructed INTERNET: asset-local colors, fixed geometry. */
+#homeMap .homeInternetNight{display:none}
+body.night #homeMap .homeInternetLight{display:none}
+body.night #homeMap .homeInternetNight{display:inline}
+
+/* Reconstructed Secret Core: theme-specific paints, shared geometry. */
+#homeMap .homeSecretCoreNight{display:none}
+body.night #homeMap .homeSecretCoreLight{display:none}
+body.night #homeMap .homeSecretCoreNight{display:inline}
+
+/* Reference lobby restoration: all coordinates share one undistorted SVG space. */
+#homeMap .lobbyDeviceNight{display:none}
+body.night #homeMap .lobbyDeviceLight{display:none}
+body.night #homeMap .lobbyDeviceNight{display:inline}
+#homeMap .lobbyTopology{overflow:visible}
+#homeMap .lobbyLabels text{font-size:27px;letter-spacing:1px}
+#homeMap .lobbyLabels .lobbyStatus{font-size:23px;letter-spacing:0}
+#homeMap .lobbyLabels .activeStatus{fill:#102137}
+#homeMap .lobbyLabels .lockedStatus{fill:#fff}
+#homeMap .lobbyLabels .nodeNote{font-size:18px}
+#homeMap .coreUplink,#homeMap .coreCallout{stroke:var(--violet)}
+#homeMap .coreCallout{stroke-width:2;fill:none}
+#lobby .map>.eyebrow{top:8px;font-size:27px}
+#lobby .rotation{font-size:20px;padding:7px 0 1px;transform:translateY(-14px)}
+@media(max-width:620px){#lobby .rotation{font-size:12px;transform:none}#lobby .map>.eyebrow{top:-5px;font-size:14px}}
+#lobby .map{background-image:repeating-linear-gradient(27deg,transparent 0 20px,var(--grid) 20.5px 21px,transparent 21.5px 42px),repeating-linear-gradient(153deg,transparent 0 20px,var(--grid) 20.5px 21px,transparent 21.5px 42px)}
+
+/* Static marker geometry; Router-outward illumination only.
+   5.2s loop; pulse occupies 12.5% = 650ms (325ms rise + 325ms fade).
+   Timing and theme intensity live here; route order lives in lobbyGlowBranches. */
+#homeMap .lobbyPackets {
+  --glow-cycle: 5.2s;
+  --glow-marker-stagger: .4s;
+  --glow-branch-stagger: .8s;
+  --glow-brightness: 1.12;
+  --glow-halo: 2.5px;
+  pointer-events: none;
+}
+body.night #homeMap .lobbyPackets {
+  --glow-brightness: 1.18;
+  --glow-halo: 3px;
+}
+#homeMap .lobbyPackets rect {
+  animation: lobby-marker-glow var(--glow-cycle) ease-in-out infinite;
+  animation-delay: calc(var(--glow-branch) * var(--glow-branch-stagger) + var(--glow-order) * var(--glow-marker-stagger));
+  filter: brightness(1) drop-shadow(0 0 0 transparent);
+  pointer-events: none;
+}
+@keyframes lobby-marker-glow {
+  0%, 12.5%, 100% {
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+  }
+  6.25% {
+    filter: brightness(var(--glow-brightness)) drop-shadow(0 0 var(--glow-halo) currentColor);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #homeMap .lobbyPackets rect {
+    animation: none;
+    filter: none;
+  }
+}

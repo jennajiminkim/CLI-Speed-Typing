@@ -6,7 +6,83 @@ const switchShape=`<g class="device"><path d="M10 55Q10 52 13 50L108 10Q111 9 11
 const routerShape=`<g class="device"><path d="M3 105L105 54l113 56-108 53Z" stroke="#00b4fe" fill="var(--side)"/><path d="M3 105v12l107 55 108-54v-8M110 163v9" stroke="#00b4fe"/><path d="M24 79Q24 76 28 74L105 35q3-2 6 0l85 43q4 2 4 5v34q0 3-3 5l-84 43q-3 1-6-1L27 124q-3-2-3-5Z"/><path class="side" d="M110 122l90-42v38l-90 46Z"/><path d="M24 78l86 44v42M110 122l90-42" fill="none"/><path d="M55 61V8q0-8 8-8t8 8v45M159 59V13q0-8 8-8t8 8v54"/><path d="M108 78l-18-10m0 0 1 7m-1-7 9 0M118 73l18-10m0 0-8 0m8 0-1 7M103 86l-17 10m0 0 1-7m-1 7 9 0M117 86l18 10m0 0-1-7m1 7-9 0M137 111l45-21m-45 29 45-21m-45 29 45-21" fill="none"/><path d="M50 111v6m12 0v6m12 0v6m12 0v6" stroke="#00ed83" stroke-width="4"/></g>`;
 const serverShape=`<g class="device"><path d="M20 44Q20 41 24 39L78 10q3-2 6 0l57 30q3 2 3 5v143q0 3-3 5l-54 31q-3 2-6 0l-58-32q-3-2-3-5Z"/><path class="side" d="M84 77l60-33v146l-60 35Z"/><path d="M20 43l64 34v147M84 77l60-33" fill="none"/>${Array.from({length:5},(_,i)=>`<path d="M28 ${59+i*28}l47 25v20L28 ${79+i*28}Z" fill="var(--bg)"/><path d="M35 ${68+i*28}v7m8-3v7m8-3v7"/><circle cx="66" cy="${89+i*28}" r="2" fill="#00ed83" stroke="none"/>`).join('')}<path d="M99 91l29-16m-29 25 29-16m-29 25 29-16m-29 50 29-16m-29 25 29-16"/></g>`;
 const clientShape=`<g class="device"><path d="M20 38q0-3 3-5L113 3q5-2 5 4v94l59 32q5 3 0 6l-91 39q-3 2-6 0L16 144q-3-2 0-5l4-3Z"/><path d="M26 42l85-31v89l-85 33ZM20 139l98-38 61 35-96 37Z"/><path d="M31 142l85-32 36 21-84 33Z" fill="var(--side)"/><path d="M42 137l36 20m-23-25 36 20m-23-25 36 20m-23-25 36 20m-23-25 36 20M40 147l85-32m-73 39 85-32" stroke-width="1"/><path d="M54 68h14v14H54Z" fill="#00b4fe"/><path d="M47 98h12v12H47Z" fill="#00ed83"/><path d="M83 84h12v12H83Z" fill="#986cff"/><path d="M62 82v8l-9 8m9-8 21 0" fill="none"/></g>`;
-$('homeMap').innerHTML=`<svg viewBox="0 0 1000 800" role="img" aria-label="아이소메트릭 네트워크 토폴로지"><g class="links"><path d="M195 268v55l290 145M485 468l325-175v-35M485 468l-90 72v42L190 687M485 468l83 72v42l228 105"/><path d="M485 425V130" stroke="#986cff" stroke-dasharray="7 7"/></g><g class="equipment" transform="translate(65 172) scale(1.25)">${switchShape}</g><text x="110" y="158">SWITCH</text><path class="labelLine" d="M110 152l-20 55 30 25"/><g class="router equipment" transform="translate(280 305) scale(1.78)">${routerShape}</g><text x="550" y="262">ROUTER</text><rect x="555" y="278" width="94" height="28" rx="3" fill="#00ed83"/><text x="565" y="299" style="fill:#102137;font-size:19px">ACTIVE</text><path class="labelLine" d="M538 258l-24 75"/><g class="equipment" transform="translate(75 552) scale(1.25)">${clientShape}</g><text x="95" y="548">CLIENT</text><g class="equipment" transform="translate(707 525) scale(1.25)">${serverShape}</g><text x="895" y="527">LINUX</text><text x="895" y="553">SERVER</text><g class="globe" transform="translate(810 245)" fill="none"><circle r="65"/><ellipse rx="34" ry="65"/><ellipse rx="65" ry="34"/><path d="M-65 0H65M0-65V65"/></g><text x="850" y="150">INTERNET</text><path class="labelLine" d="M847 155l-20 29"/><g transform="translate(440 50)" stroke="#986cff" stroke-width="2" stroke-linejoin="round"><path d="M-23 101l68-34 68 34-68 30Z" fill="#986cff22" stroke="none"/><path d="M0 27L43 3l43 24v48L43 99 0 75Z" fill="#986cff22"/><path d="M0 27l43 24 43-24M43 51v48" fill="none"/><rect x="55" y="56" width="15" height="20" rx="2" fill="none"/><path d="M58 56v-8q5-10 9-3v10" fill="none"/></g><text x="580" y="64">SECRET CORE NODE</text><rect x="580" y="77" width="94" height="27" rx="3" fill="#986cff"/><text x="590" y="98" style="fill:white;font-size:18px">LOCKED</text><text x="580" y="128" class="nodeNote">1위 전용 · 서버 연동 예정</text><g fill="#00ed83"><rect x="232" y="345" width="12" height="12"/><rect x="680" y="352" width="12" height="12"/><rect x="335" y="610" width="12" height="12"/><rect x="600" y="601" width="12" height="12"/></g><g fill="#00b4fe"><rect x="290" y="375" width="12" height="12"/><rect x="720" y="331" width="12" height="12"/><rect x="285" y="634" width="12" height="12"/><rect x="653" y="625" width="12" height="12"/></g></svg>`;
+// Lobby coordinates measured from reference_home_light.png, relative to (20, 140).
+// Device SVGs remain external, byte-identical approved assets; only uniform placement.
+const lobbyDevices = [
+  { name:'Switch', asset:'switch', x:50, y:174, width:260, height:180 },
+  { name:'Router', asset:'router', x:280, y:294, width:400, height:290 },
+  { name:'Client', asset:'client', x:71, y:542, width:242, height:232 },
+  { name:'Linux Server', asset:'linux-server', x:695, y:492, width:230, height:305 },
+  { name:'Internet', asset:'internet', x:730, y:180, width:175, height:175 },
+  { name:'Secret Core', asset:'secret-core', x:415, y:43, width:155, height:149 }
+];
+const lobbyRoutes = [
+  { name:'switch-router', d:'M199 299 V329 L370 414' },
+  { name:'router-internet', d:'M624 427 L810 333 V319' },
+  { name:'router-client', d:'M403 516 V549 L220 642' },
+  { name:'router-server', d:'M574 515 V555 L732 634' }
+];
+const lobbyPackets = [
+  { route:'switch-router', x:242, y:350, color:'green' },
+  { route:'switch-router', x:299, y:378, color:'blue' },
+  { route:'router-internet', x:691, y:393.1, color:'green' },
+  { route:'router-internet', x:728, y:374.4, color:'blue' },
+  { route:'router-client', x:349, y:576.4, color:'green' },
+  { route:'router-client', x:301, y:600.8, color:'blue' },
+  { route:'router-server', x:612, y:574, color:'green' },
+  { route:'router-server', x:666, y:601, color:'blue' }
+];
+// Animation metadata only: physical Router-outward order, independent of DOM order.
+const lobbyGlowBranches = [
+  { route:'switch-router', outwardX:-1 },
+  { route:'router-client', outwardX:-1 },
+  { route:'router-internet', outwardX:1 },
+  { route:'router-server', outwardX:1 }
+];
+function lobbyGlowStyle(packet) {
+  const branchIndex = lobbyGlowBranches.findIndex(b => b.route === packet.route);
+  const branch = lobbyGlowBranches[branchIndex];
+  const outward = lobbyPackets.filter(p => p.route === packet.route)
+    .slice().sort((a,b) => branch.outwardX * (a.x-b.x));
+  return `--glow-branch:${branchIndex};--glow-order:${outward.indexOf(packet)};color:var(--${packet.color})`;
+}
+$('homeMap').innerHTML=`<svg class="lobbyTopology" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" role="img" aria-label="아이소메트릭 네트워크 토폴로지">
+  <g class="links lobbyRoutes" stroke-linejoin="round" stroke-linecap="round">
+    ${lobbyRoutes.map(r=>`<path data-route="${r.name}" d="${r.d}"/>`).join('')}
+    <path class="coreUplink" d="M488 162 V354" stroke-dasharray="7 7"/>
+  </g>
+  <g class="lobbyPackets">${lobbyPackets.map(p=>`<rect data-route="${p.route}" style="${lobbyGlowStyle(p)}" x="${p.x-6}" y="${p.y-6}" width="12" height="12" fill="var(--${p.color})"/>`).join('')}</g>
+  <g class="lobbyDevices">${lobbyDevices.map(d=>`<g data-device="${d.asset}" aria-label="${d.name}"><image class="lobbyDeviceLight" href="assets/${d.asset}-light.svg" x="${d.x}" y="${d.y}" width="${d.width}" height="${d.height}" preserveAspectRatio="xMidYMid meet"/><image class="lobbyDeviceNight" href="assets/${d.asset}-night.svg" x="${d.x}" y="${d.y}" width="${d.width}" height="${d.height}" preserveAspectRatio="xMidYMid meet"/></g>`).join('')}</g>
+  <g class="links lobbySocketLeads"><path d="M810 333 V319.5"/><path class="coreUplink" d="M488 162 V190" stroke-dasharray="7 7"/></g>
+  <g class="lobbyCallouts" fill="none" stroke-linejoin="round">
+    <path class="labelLine" d="M97 161 L81 209 L110 234"/>
+    <path class="labelLine" d="M537 260 L490 346"/>
+    <path class="labelLine" d="M83 537 L71 581 L94 595"/>
+    <path class="labelLine" d="M851 154 L832 192"/>
+    <path class="labelLine" d="M892 504 L878 540"/>
+    <path class="coreCallout" d="M534 109 L547 103 L563 66 L573 63"/>
+  </g>
+  <g class="lobbyCalloutPins">
+    <rect x="91" y="155" width="11" height="11" fill="var(--blue)"/>
+    <rect x="532" y="255" width="11" height="11" fill="var(--green)"/>
+    <rect x="77" y="532" width="11" height="11" fill="var(--blue)"/>
+    <rect x="847" y="150" width="8" height="8" fill="var(--blue)"/>
+    <rect x="886" y="498" width="11" height="11" fill="var(--blue)"/>
+  </g>
+  <g class="lobbyLabels">
+    <text x="112" y="167">SWITCH</text>
+    <text x="550" y="266">ROUTER</text>
+    <text x="98" y="543">CLIENT</text>
+    <text x="862" y="159">INTERNET</text>
+    <text x="906" y="510">LINUX</text><text x="906" y="536">SERVER</text>
+    <text x="582" y="70">SECRET CORE NODE</text>
+    <rect x="556" y="279" width="94" height="28" rx="3" fill="var(--green)"/>
+    <text class="lobbyStatus activeStatus" x="566" y="300">ACTIVE</text>
+    <rect x="582" y="80" width="94" height="27" rx="3" fill="var(--violet)"/>
+    <text class="lobbyStatus lockedStatus" x="592" y="101">LOCKED</text>
+    <text x="582" y="130" class="nodeNote">1위 전용 · 서버 연동 예정</text>
+  </g>
+</svg>`;
 $('leftDevice').innerHTML=`<svg viewBox="0 0 230 550"><text x="20" y="70">SWITCH</text><g transform="translate(10 90)">${switchShape}</g><text x="20" y="330">ROUTER</text><g transform="translate(0 350)">${routerShape}</g></svg>`;
 $('rightDevice').innerHTML=`<svg viewBox="0 0 170 300"><text x="25" y="25">SERVER</text><g transform="translate(0 40)">${serverShape}</g></svg>`;
 function init(){

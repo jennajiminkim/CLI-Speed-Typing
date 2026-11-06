@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 242 232">
+  <!-- Generator: Adobe Illustrator 30.8.2, SVG Export Plug-In . SVG Version: 2.1.4 Build 7)  -->
+  <defs>
+    <style>
+      .st0 {
+        stroke-width: 1.55px;
+      }
+
+      .st0, .st1, .st2, .st3, .st4, .st5, .st6, .st7, .st8, .st9, .st10, .st11, .st12 {
+        stroke-linejoin: round;
+      }
+
+      .st0, .st2, .st4, .st5, .st8, .st11, .st12 {
+        fill: none;
+      }
+
+      .st0, .st6, .st7, .st10 {
+        stroke: #13233d;
+      }
+
+      .st1 {
+        fill: #eaf4ff;
+        stroke-width: 1.25px;
+      }
+
+      .st1, .st2 {
+        stroke: #0877dc;
+      }
+
+      .st13 {
+        fill: url(#_무제_그라디언트);
+      }
+
+      .st2 {
+        stroke-width: .65px;
+      }
+
+      .st3 {
+        fill: #e6f5ff;
+        stroke: #087edb;
+        stroke-width: .85px;
+      }
+
+      .st4 {
+        stroke-width: 1.9px;
+      }
+
+      .st4, .st5, .st8, .st9, .st11, .st12 {
+        stroke: #07369b;
+      }
+
+      .st5 {
+        stroke-width: 1.85px;
+      }
+
+      .st6 {
+        fill: #00ec4d;
+      }
+
+      .st6, .st7, .st10 {
+        stroke-width: 1.4px;
+      }
+
+      .st14 {
+        fill: #f4faff;
+      }
+
+      .st15 {
+        fill: #d0e4ff;
+      }
+
+      .st7 {
+        fill: #984cef;
+      }
+
+      .st8 {
+        stroke-width: 2px;
+      }
+
+      .st9 {
+        fill: #e5f0ff;
+        stroke-width: 1.65px;
+      }
+
+      .st10 {
+        fill: #00cce7;
+      }
+
+      .st11 {
+        stroke-width: 1.5px;
+      }
+
+      .st12 {
+        stroke-width: 1.8px;
+      }
+
+      .st16 {
+        fill: #c8e0ff;
+      }
+    </style>
+    <linearGradient id="_무제_그라디언트" data-name="무제 그라디언트" x1="-833.75" y1="652.71" x2="-832.95" y2="651.71" gradientTransform="translate(166903.6966 63676.2697) scale(200.1417 -97.4083)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4faff"/>
+      <stop offset="1" stop-color="#eaf4ff"/>
+    </linearGradient>
+  </defs>
+  <g id="client-ground-shadows">
+    <path id="client-ground-block" class="st15" d="M6.62,174.28l130.38-59.28,101,45-134,65L6.62,174.28Z"/>
+  </g>
+  <g id="client-chassis-front">
+    <path id="client-front-surface" class="st16" d="M23,157l81,42.6v4.4c-1.67,0-3.33-.4-5-1.2l-74-34.8c-2.67-1.33-4-4-4-8l2-3Z"/>
+  </g>
+  <g id="client-chassis-side">
+    <path id="client-side-surface" class="st16" d="M104,199.6l119-56.6v2c.67,2-.33,3.67-3,5l-111,52.8c-1.67.8-3.33,1.2-5,1.2v-4.4Z"/>
+  </g>
+  <g id="client-keyboard-deck">
+    <path id="client-deck-face" class="st13" d="M23,157l124-55,70,34c4.67,2,6.67,4.33,6,7l-115,55.4c-2.67,1.47-5.67,1.33-9-.4l-74-36.8c-1.47-.8-2.13-2.2-2-4.2Z"/>
+  </g>
+  <g id="client-chassis-outlines">
+    <path id="client-base-boundary" class="st4" d="M147,102l70,34c4.67,2,7,5,7,9,0,2-1.33,3.67-4,5l-111,52.8c-3.33,1.6-6.67,1.6-10,0l-74-34.8c-2.67-1.33-4-4-4-8,0-1.33.67-2.33,2-3"/>
+    <path id="client-deck-front-edge" class="st12" d="M23,157c-.13,2,.53,3.4,2,4.2l74,36.8c3.33,1.73,6.33,1.87,9,.4l115-55.4"/>
+    <path id="client-base-nose-joint" class="st11" d="M104,199.6v4.4"/>
+    <path id="client-rim-highlight" class="st2" d="M26,164l74,37M108,201l112-53.6"/>
+  </g>
+  <g id="client-screen-frame">
+    <path id="client-lid-bezel" class="st14" d="M17.4,62.8c0-2.87,1.53-5,4.6-6.4L137.4,5.6c5.87-2.27,9.13-.27,9.8,6l-.2,90.4-124,55c-3.8,1.8-5.67-.13-5.6-5.8V62.8Z"/>
+  </g>
+  <g id="client-screen-depth">
+    <path id="client-left-depth" class="st16" d="M17.4,63.5l4.3,2.8v84.1c0,2.67.43,4.87,1.3,6.6-3.8,1.8-5.67-.13-5.6-5.8V63.5Z"/>
+  </g>
+  <g id="client-hinge">
+    <path id="client-hinge-boundary" class="st5" d="M23,157l124-55"/>
+  </g>
+  <g id="client-screen-outlines">
+    <path id="client-lid-open-contour" class="st8" d="M23,157c-3.8,1.8-5.67-.13-5.6-5.8V62.8c0-2.87,1.53-5,4.6-6.4L137.4,5.6c5.87-2.27,9.13-.27,9.8,6l-.2,90.4"/>
+  </g>
+  <g id="client-display">
+    <path id="client-panel" class="st9" d="M26,68c0-2,1-3.43,3-4.3L139.1,14.9c1.27-.53,1.9.2,1.9,2.2v79.9l-115,52v-81Z"/>
+  </g>
+  <g id="client-display-logo">
+    <path id="client-logo-branches" class="st0" d="M82,70c-3.5,13-17,17-17,24M82,70c3.5,10,19,0,20,9.5"/>
+    <path id="client-logo-root" class="st10" d="M76,58.5l12-5v14l-12,5v-14Z"/>
+    <path id="client-logo-green" class="st6" d="M59,96.5l12-5v14l-12,5v-14Z"/>
+    <path id="client-logo-purple" class="st7" d="M96,82l12-5v14l-12,5v-14Z"/>
+  </g>
+  <g id="client-keyboard-keys">
+    <path id="client-key-row1-01" class="st3" d="M42.52,157.8l7.65-3.42,7.05,3.73-7.62,3.43-7.09-3.74Z"/>
+    <path id="client-key-row1-02" class="st3" d="M51.11,153.96l7.65-3.42,7.02,3.72-7.62,3.43-7.05-3.73Z"/>
+    <path id="client-key-row1-03" class="st3" d="M59.7,150.11l7.65-3.42,6.98,3.71-7.62,3.43-7.01-3.72Z"/>
+    <path id="client-key-row1-04" class="st3" d="M68.29,146.26l7.54-3.38,6.94,3.7-7.51,3.39-6.98-3.71Z"/>
+    <path id="client-key-row1-05" class="st3" d="M76.78,142.46l9.54-4.27,6.9,3.69-9.49,4.28-6.94-3.7Z"/>
+    <path id="client-key-row1-06" class="st3" d="M87.26,137.77l9.01-4.03,6.86,3.68-8.97,4.04-6.89-3.69Z"/>
+    <path id="client-key-row1-07" class="st3" d="M97.21,133.31l9.01-4.03,6.81,3.66-8.97,4.05-6.85-3.68Z"/>
+    <path id="client-key-row1-08" class="st3" d="M107.17,128.86l7.65-3.42,6.78,3.66-7.62,3.43-6.81-3.66Z"/>
+    <path id="client-key-row1-09" class="st3" d="M115.76,125.01l4.09-1.83,6.76,3.65-4.07,1.83-6.77-3.65Z"/>
+    <path id="client-key-row1-10" class="st3" d="M120.79,122.76l8.8-3.94,6.71,3.64-8.76,3.95-6.75-3.65Z"/>
+    <path id="client-key-row1-11" class="st3" d="M130.54,118.4l7.86-3.52,6.68,3.63-7.83,3.53-6.71-3.64Z"/>
+    <path id="client-key-row1-12" class="st3" d="M139.34,114.45l7.02-3.14,6.64,3.62-6.99,3.15-6.67-3.63Z"/>
+    <path id="client-key-row2-01" class="st3" d="M50.57,162.05l7.61-3.43,7.05,3.73-7.58,3.44-7.09-3.74Z"/>
+    <path id="client-key-row2-02" class="st3" d="M59.12,158.19l7.61-3.43,7.02,3.72-7.58,3.44-7.05-3.73Z"/>
+    <path id="client-key-row2-03" class="st3" d="M67.67,154.34l7.61-3.43,6.98,3.71-7.58,3.44-7.01-3.72Z"/>
+    <path id="client-key-row2-04" class="st3" d="M76.22,150.48l7.51-3.39,6.94,3.7-7.48,3.4-6.98-3.71Z"/>
+    <path id="client-key-row2-05" class="st3" d="M84.67,146.67l9.49-4.28,6.9,3.69-9.45,4.29-6.94-3.7Z"/>
+    <path id="client-key-row2-06" class="st3" d="M95.1,141.96l8.97-4.05,6.86,3.68-8.93,4.06-6.89-3.69Z"/>
+    <path id="client-key-row2-07" class="st3" d="M105,137.49l8.97-4.05,6.81,3.66-8.93,4.06-6.85-3.68Z"/>
+    <path id="client-key-row2-08" class="st3" d="M114.91,133.02l7.61-3.43,6.78,3.66-7.58,3.44-6.81-3.66Z"/>
+    <path id="client-key-row2-09" class="st3" d="M123.46,129.16l4.07-1.83,6.76,3.65-4.05,1.84-6.77-3.65Z"/>
+    <path id="client-key-row2-10" class="st3" d="M128.46,126.9l8.76-3.95,6.71,3.64-8.72,3.96-6.75-3.65Z"/>
+    <path id="client-key-row2-11" class="st3" d="M138.16,122.53l7.82-3.53,6.68,3.63-7.79,3.54-6.71-3.64Z"/>
+    <path id="client-key-row2-12" class="st3" d="M146.92,118.58l6.99-3.15,6.64,3.62-6.96,3.16-6.67-3.63Z"/>
+    <path id="client-key-row3-01" class="st3" d="M58.62,166.3l7.57-3.44,7.05,3.73-7.54,3.45-7.09-3.74Z"/>
+    <path id="client-key-row3-02" class="st3" d="M67.13,162.43l7.57-3.44,7.02,3.72-7.54,3.45-7.05-3.73Z"/>
+    <path id="client-key-row3-03" class="st3" d="M75.64,158.56l7.57-3.44,6.98,3.71-7.54,3.45-7.01-3.72Z"/>
+    <path id="client-key-row3-04" class="st3" d="M84.15,154.69l7.47-3.4,6.94,3.7-7.44,3.41-6.98-3.71Z"/>
+    <path id="client-key-row3-05" class="st3" d="M92.55,150.87l9.44-4.29,6.9,3.69-9.4,4.3-6.94-3.7Z"/>
+    <path id="client-key-row3-06" class="st3" d="M102.93,146.15l8.92-4.06,6.86,3.68-8.89,4.07-6.89-3.69Z"/>
+    <path id="client-key-row3-07" class="st3" d="M112.79,141.67l8.92-4.06,6.81,3.66-8.88,4.07-6.85-3.68Z"/>
+    <path id="client-key-row3-08" class="st3" d="M122.65,137.18l7.57-3.44,6.78,3.66-7.54,3.45-6.81-3.66Z"/>
+    <path id="client-key-row3-09" class="st3" d="M131.15,133.32l13.7-6.23,6.71,3.64-13.64,6.24-6.77-3.65Z"/>
+    <path id="client-key-row3-10" class="st3" d="M145.78,126.66l7.78-3.54,6.68,3.63-7.75,3.55-6.71-3.64Z"/>
+    <path id="client-key-row3-11" class="st3" d="M154.5,122.7l6.95-3.16,6.64,3.62-6.92,3.17-6.67-3.63Z"/>
+    <path id="client-key-row4-01" class="st3" d="M66.68,170.55l7.54-3.45,7.05,3.73-7.5,3.46-7.09-3.74Z"/>
+    <path id="client-key-row4-02" class="st3" d="M75.14,166.67l7.54-3.45,7.02,3.72-7.5,3.46-7.05-3.73Z"/>
+    <path id="client-key-row4-03" class="st3" d="M83.61,162.79l7.54-3.45,6.98,3.71-7.5,3.46-7.01-3.72Z"/>
+    <path id="client-key-row4-04" class="st3" d="M92.08,158.9l12.08-5.54,6.92,3.69-12.03,5.55-6.98-3.71Z"/>
+    <path id="client-key-row4-05" class="st3" d="M105.09,152.94l14.56-6.67,6.86,3.68-14.5,6.69-6.92-3.69Z"/>
+    <path id="client-key-row4-06" class="st3" d="M120.57,145.84l8.88-4.07,6.81,3.66-8.84,4.08-6.85-3.68Z"/>
+    <path id="client-key-row4-07" class="st3" d="M130.38,141.35l7.54-3.45,6.78,3.66-7.5,3.46-6.81-3.66Z"/>
+    <path id="client-key-row4-08" class="st3" d="M138.85,137.47l13.63-6.25,6.71,3.64-13.57,6.26-6.77-3.65Z"/>
+    <path id="client-key-row4-09" class="st3" d="M153.41,130.8l7.74-3.55,6.68,3.63-7.71,3.56-6.71-3.64Z"/>
+    <path id="client-key-row4-10" class="st3" d="M162.08,126.82l6.92-3.17,6.64,3.62-6.89,3.18-6.67-3.63Z"/>
+  </g>
+  <g id="client-trackpad">
+    <path id="client-pad" class="st1" d="M116.11,164.24l36.07-16.8,16.58,8.94-35.68,16.91-16.96-9.04Z"/>
+  </g>
+</svg>
