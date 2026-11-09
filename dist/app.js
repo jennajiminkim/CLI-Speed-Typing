@@ -189,7 +189,12 @@ function init(){
  const now=()=>anchor+Math.max(performance.now()-anchor,Date.now()-wall);
  function dateKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());return ['year','month','day'].map(type=>parts.find(p=>p.type===type).value).join('-')}
  let bestKey='';
- function loadBest(){bestKey=`cli-speedrun-best-v1:${dateKey()}`;best=0;try{const stored=Number(localStorage.getItem(bestKey));if(Number.isFinite(stored)&&stored>0)best=stored}catch{}$('best').textContent=best?formatTime(best):'—'}
+ const todayBestKey=()=>`cli-speedrun-best-v1:${dateKey()}`;
+ function readBest(key){
+  try{const stored=Number(localStorage.getItem(key));if(Number.isFinite(stored)&&stored>0)return stored}catch{}
+  return 0;
+ }
+ function loadBest(){bestKey=todayBestKey();best=readBest(bestKey);$('best').textContent=best?formatTime(best):'—'}
  const formatTime=value=>{const centis=Math.floor(Math.max(0,value)*100),minutes=Math.floor(centis/6000),seconds=Math.floor(centis/100)%60,cs=centis%100;return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}.${String(cs).padStart(2,'0')}`};
  loadBest();
  function focus(){if(e.status==='running'&&!$('exitDialog').open)$('typing').focus({preventScroll:true})}
@@ -204,7 +209,18 @@ function init(){
  function judgment(text){const status=$('feedback');if(status.textContent!==text)status.textContent=text}
  function render(){const secs=e.seconds(now()),progress=e.index/bank.length*100;$('time').textContent=formatTime(secs);$('timeBar').style.width=`${progress}%`;$('timeBar').setAttribute('aria-valuenow',String(e.index));$('commandProgress').textContent=`${String(e.index).padStart(2,'0')} / 10`;$('score').textContent=Math.round(e.metrics().score);$('accuracy').textContent=(e.metrics().accuracy*100).toFixed(1)+'%';$('combo').textContent='×'+e.combo;$('youChars').textContent=`${e.index}/10`;$('youMarker').style.left=progress+'%';$('typing').disabled=e.status!=='running';$('practiceNotice').hidden=!e.practice;$('modeLabel').textContent=e.practice?'PRACTICE SPEEDRUN · MIXED':'DAILY SPEEDRUN · MIXED'}
  function start(practice=false){loadBest();wasPractice=practice;anchor=performance.now();wall=Date.now();e.reset();e.practice=practice;e.status='countdown';e.started=anchor+3000;lastJudgment='READY';show('arena');command();judgment('READY');$('inputState').textContent='직접 입력 · Enter로 제출';$('countdown').hidden=false;$('countdownValue').textContent='3';render()}
- function finish(stopped=false,finishedAt=now()){e.finish(finishedAt);$('countdown').hidden=true;$('exitDialog').close();const m=e.metrics(),complete=!stopped&&e.index===bank.length,eligible=complete&&!e.practice;let newBest=false;if(eligible&&(!best||e.elapsed<best)){best=e.elapsed;newBest=true;try{localStorage.setItem(bestKey,String(best))}catch{}$('best').textContent=formatTime(best)}$('resultTitle').innerHTML=stopped?'SESSION<br>ENDED':complete?(e.practice?'PRACTICE<br>COMPLETE':'SPEEDRUN<br>COMPLETE'):'RUN<br>INCOMPLETE';$('resultDetail').textContent=complete?`10개 명령어 완료 · 총 완료 시간 ${formatTime(e.elapsed)}`:`${e.index}/10개 완료 · 미완주 기록은 저장하지 않습니다.`;$('finalScore').textContent=complete?formatTime(e.elapsed):'—';$('resultStats').innerHTML=`<div><small>ACCURACY</small><b>${(m.accuracy*100).toFixed(1)}%</b></div><div><small>COMMANDS</small><b>${e.index}/10</b></div><div><small>BEST COMBO</small><b>×${e.maxCombo}</b></div>`;$('recordStatus').textContent=stopped?'중도 종료 · 기록에 반영하지 않았습니다.':!complete?'미완주 · 기록에 반영하지 않았습니다.':e.practice?'연습 기록 · 오늘의 최고 기록에 반영하지 않았습니다.':newBest?'NEW BEST · 이 기기의 오늘 최고 완주 시간을 갱신했습니다.':'완주 기록 저장 · 이 기기에만 저장되며 공식 랭킹에는 전송되지 않습니다.';show('result')}
+ function finish(stopped=false,finishedAt=now()){e.finish(finishedAt);$('countdown').hidden=true;$('exitDialog').close();const m=e.metrics(),complete=!stopped&&e.index===bank.length,eligible=complete&&!e.practice;let newBest=false;if(eligible&&(!best||e.elapsed<best)){best=e.elapsed;newBest=true;try{localStorage.setItem(bestKey,String(best))}catch{}$('best').textContent=formatTime(best)}
+  $('resultTitle').textContent=stopped?'SESSION ENDED':complete?(e.practice?'PRACTICE COMPLETE':'SPEEDRUN COMPLETE'):'RUN INCOMPLETE';
+  $('resultDetail').textContent=complete?'10개 명령어 완료':`${e.index}/10개 완료 · 미완주 기록은 저장하지 않습니다.`;
+  $('finalScore').textContent=complete?formatTime(e.elapsed):'—';
+  const todayBest=readBest(todayBestKey());
+  $('resultBest').textContent=todayBest?formatTime(todayBest):'—';
+  $('resultStats').innerHTML=`<div><small>ACCURACY</small><b>${(m.accuracy*100).toFixed(1)}%</b></div><div><small>COMMANDS</small><b>${e.index}/10</b></div><div><small>BEST COMBO</small><b>×${e.maxCombo}</b></div>`;
+  const recordStatus=$('recordStatus');
+  recordStatus.dataset.newBest=String(newBest);
+  recordStatus.textContent=stopped?'중도 종료 · 기록에 반영하지 않았습니다.':!complete?'미완주 · 기록에 반영하지 않았습니다.':e.practice?'연습 기록 · 오늘의 최고 기록에 반영하지 않았습니다.':newBest?'NEW PERSONAL BEST':'완주 · 오늘의 최고 기록 유지';
+  show('result');
+ }
  function requestExit(){if(view==='arena')$('exitDialog').showModal();else show('lobby')}
  $('start').onclick=()=>start();$('practice').onclick=()=>start(true);$('retry').onclick=()=>start(wasPractice);$('back').onclick=()=>show('lobby');$('home').onclick=requestExit;$('exit').onclick=requestExit;$('cancelExit').onclick=()=>{$('exitDialog').close();focus()};$('confirmExit').onclick=()=>finish(true);$('exitDialog').addEventListener('close',focus);
  $('typing').addEventListener('input',ev=>{if(e.status!=='running')return;e.input(ev.target.value,target());drawTarget();judgment(wrong()?'ERROR':lastJudgment);$('inputState').textContent=wrong()?'표시된 오류를 수정해주세요':'Enter로 제출';render()});

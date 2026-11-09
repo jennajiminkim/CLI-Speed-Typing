@@ -403,3 +403,102 @@ body.night #arena .arenaArt-night { display: inline; }
 @media (max-width: 720px) {
   #arenaRoutes { display: none; }
 }
+
+/* Balance the result between the existing header and footer. */
+body[data-view="result"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+#result {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  height: auto;
+  min-height: 0;
+  padding: clamp(20px, 3vh, 38px) 16px;
+}
+#result .resultInner {
+  display: grid;
+  gap: clamp(16px, 2.65vh, 30px);
+  width: min(100%, 800px);
+}
+.resultIntro #resultMode, .resultTime > .eyebrow { font-size: 14px; }
+#resultTitle {
+  margin: 8px 0;
+  font-size: clamp(24px, 4.1vw, 52px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+#resultDetail, #recordStatus {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.resultTime #finalScore {
+  margin: 5px 0 8px;
+  font-size: clamp(42px, 10.5vw, 92px);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+#recordStatus[data-new-best="true"] {
+  display: inline-block;
+  padding: 4px 9px;
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  color: var(--ink);
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+.resultRecords {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 12px 0;
+  border-block: 1px solid var(--line);
+}
+.resultRecords > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 5px;
+  padding: 0 6px;
+  border: 0;
+}
+.resultRecords > div + div { border-inline-start: 1px solid var(--line); }
+.resultRecords dt, #result .resultStats small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.resultRecords .pixel { font-size: clamp(22px, 3.5vw, 32px); }
+.resultRecords .muted { font-size: 12px; }
+#result .resultStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 0 15px;
+  border-top: 0;
+}
+#result .resultStats small { margin-bottom: 7px; }
+#result .resultStats b { font-size: clamp(18px, 3.2vw, 28px); }
+#result .resultActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 12px;
+}
+#result .resultActions button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 150px;
+  width: 150px;
+  height: 52px;
+  padding: 0;
+}
+.resultNext > .muted { display: block; line-height: 1.45; }
+@media (max-width: 347px) {
+  #result .resultActions { flex-direction: column; align-items: center; }
+  #result .resultActions button { flex: 0 0 52px; }
+}
