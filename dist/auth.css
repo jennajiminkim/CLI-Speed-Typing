@@ -1,0 +1,37 @@
+/* Phase 2 invite/auth pages. Isolated from the approved game screens. */
+.authPage{min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink)}
+.authHeader{height:auto;min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 18px;padding:14px 18px}
+.authBrand{text-decoration:none;color:var(--ink);font-size:clamp(17px,2.2vw,28px)}
+.authBrand span{color:var(--blue)}
+.authEyebrow,.authBack{color:var(--muted);font:14px CLIText,monospace;letter-spacing:1px}
+.authBack{text-decoration:none;border:1px solid var(--line);padding:9px 12px;border-radius:3px}
+.authBack:hover,.authBack:focus-visible{border-color:var(--blue)}
+.authMain{width:min(100%,760px);padding:35px 24px 50px;margin:auto;display:grid;gap:19px;text-align:center}
+.authIntro h1,.rankMain h1{font-size:clamp(30px,5vw,55px);margin:10px 0}
+.authIntro>p:last-child{font-size:15px;line-height:1.7;color:var(--muted);max-width:550px;margin:0 auto}
+.authCard{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:30px;text-align:left;max-width:550px;width:100%;margin:0 auto}
+.authTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.authTabs button[aria-pressed=true]{border-color:var(--blue);background:var(--face);font-weight:bold}
+.authCard form{display:grid;gap:10px}
+.authCard label{margin:7px 0 0;font:14px CLIText,monospace}
+.authCard input{min-width:0;width:100%;padding:13px 14px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.authCard input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.authCard p{line-height:1.6;font-size:13px}
+.authCard h2{font-size:22px}
+.authSubmit{margin-top:14px;min-height:49px;background:var(--green);border-color:var(--green);color:#0c2433;font-weight:700}
+.authSubmit:hover{background:#56f6ab}
+.authSubmit:disabled{opacity:.5;cursor:wait}
+.authMessage{margin:20px 0 0;min-height:20px;color:var(--muted)}
+.authMessage[data-error=true]{color:#c42d46}
+.authRankLink{display:inline-block;padding:14px 19px;margin:8px 0;background:var(--green);color:#0c2433;text-decoration:none;border-radius:4px;font-weight:bold}
+.authSignout{display:block;margin-top:12px}
+.authDisclaimer{font-size:12px;color:var(--muted);line-height:1.7}
+.rankMain .authCard{max-width:700px}
+.rankTableWrap{overflow-x:auto}
+.rankTable{border-collapse:collapse;width:100%;text-align:left;white-space:nowrap;margin:15px 0 5px}
+.rankTable th,.rankTable td{padding:13px 10px;border-bottom:1px solid var(--line);font:14px CLIText,monospace}
+.rankTable th:last-child,.rankTable td:last-child{text-align:right}
+.rankTable th{color:var(--muted)}
+.authPage footer{margin-top:auto}
+.authPage [hidden]{display:none!important}
+@media(max-width:620px){.authHeader{margin:0 10px;padding:12px 6px}.authEyebrow{display:none}.authMain{padding:25px 14px 45px}.authCard{padding:20px}.authBrand{font-size:16px}.authBack{font-size:11px}}

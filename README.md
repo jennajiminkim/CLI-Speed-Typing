@@ -37,3 +37,6 @@ The public Vercel version loads compatible webfont distributions through the Noo
 
 ## Submission status
 Second-checkpoint build; implementation and automated logic tests are done, but this is not a completed production multiplayer game.
+## Phase 2 — invite/auth feature branch (not production)
+
+Invitation-based Supabase Auth and a read-only, RLS-protected friend leaderboard are being developed on `feature/invite-auth-phase2`. This functionality requires a **separate new Supabase project**, a Preview environment configuration, and live security QA before it may be used. **Official record submission is NOT implemented** in Phase 2. See [Phase 2 setup and security guide](docs/phase2-invite-auth.md). The public main-branch playtest remains local-only.

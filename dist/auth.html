@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>친구 초대 · CLI Speed Typing</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="auth.css">
+</head>
+<body class="authPage">
+<header class="authHeader">
+  <a class="authBrand pixel" href="./"><span aria-hidden="true">◇</span> CLI SPEED TYPING</a>
+  <span class="authEyebrow">INVITE ACCESS</span>
+  <a class="authBack" href="./">← LOBBY</a>
+</header>
+<main class="authMain">
+  <div class="authIntro"><p class="eyebrow">FRIENDS ONLY</p><h1 class="pixel">JOIN THE RACE</h1><p>초대받은 친구만 공유 랭킹에 참여할 수 있습니다. 계정 생성 후 이메일 인증과 초대 코드 등록을 완료해주세요.</p></div>
+  <section class="authCard" aria-label="친구 로그인 및 가입">
+    <div id="authTabs" class="authTabs"><button type="button" id="tabLogin" aria-pressed="true">로그인</button><button type="button" id="tabSignup" aria-pressed="false">가입하기</button></div>
+    <form id="loginForm">
+      <label for="loginEmail">이메일</label><input id="loginEmail" type="email" autocomplete="email" maxlength="254" required>
+      <label for="loginPassword">비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="8" required>
+      <button class="primary authSubmit" type="submit">로그인 →</button>
+    </form>
+    <form id="signupForm" hidden>
+      <label for="signupEmail">이메일</label><input id="signupEmail" type="email" autocomplete="email" maxlength="254" required>
+      <label for="signupPassword">비밀번호 (8자 이상)</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required>
+      <label for="signupInvite">초대 코드 (32자리)</label><input id="signupInvite" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" pattern="[A-Fa-f0-9]{32}" required>
+      <label for="signupNickname">랭킹 닉네임 (2–16자)</label><input id="signupNickname" type="text" autocomplete="nickname" minlength="2" maxlength="16" pattern="[A-Za-z0-9가-힣_-]{2,16}" required>
+      <p class="muted">가입 후 이메일을 인증하세요. 인증이 끝나면 로그인하여 초대 코드를 등록합니다.</p>
+      <button class="primary authSubmit" type="submit">계정 만들기 →</button>
+    </form>
+    <section id="claimSection" hidden aria-label="초대 코드 등록">
+      <h2 class="pixel">INVITE VERIFICATION</h2>
+      <p>계정은 인증되었지만 아직 친구 명단에 등록되지 않았습니다.</p>
+      <form id="claimForm">
+        <label for="claimInvite">초대 코드</label><input id="claimInvite" type="text" autocomplete="off" spellcheck="false" maxlength="32" pattern="[A-Fa-f0-9]{32}" required>
+        <label for="claimNickname">랭킹 닉네임</label><input id="claimNickname" type="text" autocomplete="nickname" minlength="2" maxlength="16" pattern="[A-Za-z0-9가-힣_-]{2,16}" required>
+        <button class="primary authSubmit" type="submit">초대 등록 →</button>
+      </form>
+      <button type="button" id="claimSignout" class="authSignout">다른 계정으로 로그인</button>
+    </section>
+    <section id="memberSection" hidden aria-label="가입 완료">
+      <h2 class="pixel">ACCESS GRANTED</h2>
+      <p>환영합니다, <strong id="memberName"></strong>!</p>
+      <p>초대 인증이 완료되었습니다. 친구 랭킹은 가입된 사용자만 볼 수 있습니다.</p>
+      <a class="authRankLink" href="leaderboard.html">친구 랭킹 보기 →</a>
+      <button type="button" id="memberSignout" class="authSignout">로그아웃</button>
+    </section>
+    <p id="authMessage" class="authMessage" role="status" aria-live="polite"></p>
+  </section>
+  <p class="authDisclaimer">현재 게임 완주 기록은 로컬 테스트 기록입니다. 서버 검증 기록 제출은 다음 개발 단계에서 연결합니다.</p>
+</main>
+<footer><span>C. HYBRID / INVITE</span><span>SECURE FRIEND ACCESS · PHASE 2</span></footer>
+<script type="module" src="invite-auth.js"></script>
+</body>
+</html>
