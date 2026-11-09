@@ -9,15 +9,15 @@
 <ellipse id="internet-surface-fill" cx="84" cy="74.5" rx="65" ry="65" fill="url(#internet-surface-paint)"/>
 </g>
 <g id="internet-grid">
-<path id="internet-meridian-west" d="M85 10C57 15 36 46 37.5 78C36 106 55 131 82 139" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-meridian-inner-west" d="M85 10C73 24 66 50 65 78C64 109 71 132 82 139" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-meridian-inner-east" d="M85 10C98 23 104 52 103 78C104 110 94 134 82 139" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-meridian-east" d="M85 10C112 16 133 46 132 78C133 107 109 134 82 139" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-latitude-upper" d="M36.1 31.3C46 54 121 55 132 31.3" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-latitude-middle-upper" d="M21.1 58C43 84 121 84 146.9 58" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-latitude-middle-lower" d="M20.7 89.3C48 109 120 109.7 147.3 89.3" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-latitude-lower" d="M37.6 120C61 128 108 130 130.4 120" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
-<path id="internet-polar-latitude" d="M57.5 16.5C68 28 99 30 110.3 17.1" fill="none" stroke="#006bd6" stroke-width="1.05" opacity="0.26" stroke-linecap="butt"/>
+<path id="internet-meridian-west" d="M84 9.5C56.5 15.5 35.5 46 36.75 78C35.5 106.5 57 132.5 84 139.5" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-inner-west" d="M84 9.5C71.5 23.5 65 51 65 78C64 109.5 72.5 133 84 139.5" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-inner-east" d="M84 9.5C96.5 23.5 103 51 103 78C104 109.5 95.5 133 84 139.5" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-meridian-east" d="M84 9.5C111.5 15.5 132.5 46 131.25 78C132.5 106.5 111 132.5 84 139.5" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-upper" d="M36 31.3C46.5 54.5 121.5 54.5 132 31.3" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-middle-upper" d="M21.1 58C45 84 123 84 146.9 58" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-middle-lower" d="M20.7 89.3C48 109.35 120 109.35 147.3 89.3" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-latitude-lower" d="M37.6 120C60.5 129 107.5 129 130.4 120" fill="none" stroke="#006bd6" stroke-width="1.55" stroke-linecap="butt" stroke-linejoin="round"/>
+<path id="internet-polar-latitude" d="M57.6 16.8C68.5 29 99.5 29 110.4 16.8" fill="none" stroke="#006bd6" stroke-width="1.05" opacity="0.26" stroke-linecap="butt"/>
 </g>
 <g id="internet-outer-contour">
 <ellipse id="internet-outline" cx="84" cy="74.5" rx="65" ry="65" fill="none" stroke="#006bd6" stroke-width="1.7"/>

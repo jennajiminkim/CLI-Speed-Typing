@@ -17,10 +17,10 @@ const lobbyDevices = [
   { name:'Secret Core', asset:'secret-core', x:415, y:43, width:155, height:149 }
 ];
 const lobbyRoutes = [
-  { name:'switch-router', d:'M199 299 V329 L370 414' },
-  { name:'router-internet', d:'M624 427 L810 333 V319' },
-  { name:'router-client', d:'M403 516 V549 L220 642' },
-  { name:'router-server', d:'M574 515 V555 L732 634' }
+  { name:'switch-router', d:'M199 314 V329 L370 414', socketLead:'M199 295 V314' },
+  { name:'router-internet', d:'M624 427 L795 340.58', socketLead:'M795 340.58 L814 330.98 V319.5' },
+  { name:'router-client', d:'M403 540.5 V549 L220 642' },
+  { name:'router-server', d:'M574 532.2 V555 L732 634' }
 ];
 const lobbyPackets = [
   { route:'switch-router', x:242, y:350, color:'green' },
@@ -53,7 +53,10 @@ $('homeMap').innerHTML=`<svg class="lobbyTopology" viewBox="0 0 1000 800" preser
   </g>
   <g class="lobbyPackets">${lobbyPackets.map(p=>`<rect data-route="${p.route}" style="${lobbyGlowStyle(p)}" x="${p.x-6}" y="${p.y-6}" width="12" height="12" fill="var(--${p.color})"/>`).join('')}</g>
   <g class="lobbyDevices">${lobbyDevices.map(d=>`<g data-device="${d.asset}" aria-label="${d.name}"><image class="lobbyDeviceLight" href="assets/${d.asset}-light.svg" x="${d.x}" y="${d.y}" width="${d.width}" height="${d.height}" preserveAspectRatio="xMidYMid meet"/><image class="lobbyDeviceNight" href="assets/${d.asset}-night.svg" x="${d.x}" y="${d.y}" width="${d.width}" height="${d.height}" preserveAspectRatio="xMidYMid meet"/></g>`).join('')}</g>
-  <g class="links lobbySocketLeads"><path d="M810 333 V319.5"/><path class="coreUplink" d="M488 162 V190" stroke-dasharray="7 7"/></g>
+  <g class="links lobbySocketLeads">
+    ${lobbyRoutes.filter(r => r.socketLead).map(r => `<path d="${r.socketLead}" stroke-linejoin="round" stroke-linecap="round"/>`).join('')}
+    <path class="coreUplink" d="M488 162 V190" stroke-dasharray="7 7"/>
+  </g>
   <g class="lobbyCallouts" fill="none" stroke-linejoin="round">
     <path class="labelLine" d="M97 161 L81 209 L110 234"/>
     <path class="labelLine" d="M537 260 L490 346"/>
