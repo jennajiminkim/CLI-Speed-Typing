@@ -42,3 +42,25 @@ No disposable account or invitation was persisted. The isolated negative-test da
 GitHub `main` was `eed2cfa36bccf21ad51b2142812c61f7bbd8bc99` before the report commit. No Production deployment or promotion was requested or performed. Only this QA document is included in the feature-branch commit. The tested Preview is pinned to the implementation commit above.
 
 The core ranking flow meets the acceptance criteria. Remaining coverage is a fresh authenticated browser session, multi-user ordering, live anonymous and uninvited HTTP denial, and visual review at the three exact desktop sizes.
+
+## Multi-User Leaderboard E2E Verification
+
+**Verdict: PARTIAL.** The same-day server persistence check passed for two distinct invited accounts. The authenticated two-row browser rendering and refresh checks remain blocked in the QA browser.
+
+The target was the [same Vercel Preview](https://cli-speed-typing-25i1yvwbq-jennakim.vercel.app/leaderboard.html) from implementation commit `391e63e631a7b69be13d0ed853451840deebbb37`. Both the database and the Preview page showed the Seoul-local date `2026-11-10`. At baseline, two distinct Supabase Auth accounts had active invitation memberships. There was one official ranking row, A's `57280` ms daily best. B had no official row.
+
+The secure QA-browser sign-in for B did not complete. The user then reported completing the run directly using member B. The follow-up database query found one newly completed B session with `step_index=10` and `status=finished`. Its elapsed time calculated from server timestamps was `72864` ms and matched the new official best for B. This run was manual. B's countdown, individual HTTP requests and responses, and result banner were not captured in the QA browser.
+
+| Seoul-local date | Member | Position from database order | Official elapsed time | Screen-equivalent formatting |
+| --- | --- | --- | --- | --- |
+| 2026-11-10 | A | 1 | 57,280 ms | 00:57.28 |
+| 2026-11-10 | B | 2 | 72,864 ms | 01:12.86 |
+
+Both rows had `command_count=10`, `verification_version=server-events-v1`, and display names matching their corresponding active membership records. A's baseline remained unchanged while B's independent result was added. No test records were inserted through SQL. The deployed commit's leaderboard query filters by Seoul-local date and orders by elapsed time ascending, then user ID ascending as a deterministic tie-breaker. The database check used that order and verified scenario A (B slower). A reversed order or a tie was not exercised with live records.
+
+- **PASS — Server persistence and database ordering.** Two genuine results, distinct users, one Seoul day, fastest time first in the database query.
+- **BLOCKED — Authenticated rendering and refresh.** The actual Preview leaderboard loaded but showed `ACCESS DENIED` in the QA browser without a valid invited session. The two rows and nicknames were therefore not observed together in the browser. Fresh authenticated session, same-session new tab, refresh persistence in the UI, theme styling and exact viewport checks remain unverified. No authenticated screenshots or B request traces were collected.
+- **PASS — Live write protection.** RLS remains enabled on `public.ranked_runs`. Both `anon` and `authenticated` lacked INSERT, UPDATE and DELETE table grants, including INSERT and UPDATE column grants. The earlier live role-denial, foreign-owner submission, incomplete-run, Practice, slower-retry and public-config checks remain documented above. No new cross-account HTTP tampering or credential exposure scan was performed.
+- **Release scope.** No accounts, memberships, invitations, results, security settings or application code were changed by QA. No main-branch update, merge or Production deployment was performed. This update adds documentation only.
+
+**User acceptance status:** The server-side multi-user check is ready for UI acceptance testing. Overall multi-user E2E remains PARTIAL until an invited session shows both rows in the expected order and a refresh preserves them.
