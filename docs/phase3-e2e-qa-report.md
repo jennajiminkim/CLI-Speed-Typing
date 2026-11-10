@@ -378,3 +378,31 @@ The Chrome console also displayed a `Multiple GoTrueClient instances detected` w
 **Evidence handling:** Original screenshots remain attached to the conversation. The public report includes only sanitized outcomes, not the screenshot images, user emails, user IDs, passwords, invitation values, bearer tokens, or private response headers.
 
 **Updated security QA status:** The previously blocked **live authenticated-uninvited HTTP 403**, Data API row denial, and UI denial are now **PASS**, in addition to the earlier live unauthenticated API **401** PASS and the established database write/RPC protections. Remaining independent production-release coverage is **a comprehensive deployed-asset/response secret-exposure sweep** and any still-required non-lobby responsive/visual checks (the user explicitly scoped manual viewport screenshots to the lobby). Overall Phase 3 pre-release QA remains **PARTIAL** pending release acceptance decisions. This change is documentation-only on the feature branch; no application code, Auth/RLS setting, database record, `main`, or Production was changed.
+
+
+### Manual Mac Chrome secret-signature scan — deployed public assets (2026-11-11)
+
+**Scope-based verdict: PASS for the 10 selected public response bodies scanned; broader exposure audit remains PARTIAL.** The user supplied two Chrome DevTools screenshots at approximately **01:13–01:14 KST** from the authorized Phase 3 Preview (`https://cli-speed-typing-bhn4cde90-jennakim.vercel.app/`). A user-run read-only `Sources → Snippets` program fetched the following same-origin resources with `cache: "no-store"` and checked the returned text for `sb_secret_...`, the literal `CLI_SUPABASE_SECRET_KEY` name, and a JWT-shaped string. This was **a pattern-based scan of HTTP response bodies**, not a comprehensive credential inventory.
+
+| Resources actually checked | Result |
+| --- | --- |
+| `/`, `/auth.html`, `/leaderboard.html` | **NO SECRET SIGNATURE**, all 3 |
+| `/app.js`, `/ranked-client.js`, `/invite-auth.js`, `/leaderboard.js` | **NO SECRET SIGNATURE**, all 4 |
+| `/style.css`, `/auth.css` | **NO SECRET SIGNATURE**, both |
+| `/api/public-config` | **NO SECRET SIGNATURE** and **PUBLIC CONFIG: EXPECTED FIELDS ONLY** |
+
+Console summary captured by the user:
+
+```text
+CHECKED: 10
+REVIEW REQUIRED: 0
+NOT CHECKED: 0
+```
+
+The public-config JSON object contained exactly the `key` and `url` properties, and the exposed key matched the intended `sb_publishable_` prefix. **This is evidence that the selected deployed responses contain none of the tested secret signatures.** It does not independently establish that every possible credential is absent from all sources: response headers, other routes/auth states, runtime Network/Console traffic, third-party code, non-matching secret formats and unlisted dynamically fetched resources were not exhaustively scanned. Neither an absent regex match nor a matched publishable key should be misrepresented as a full security audit.
+
+**Data preservation:** A subsequent read-only Supabase check returned **3 ranked sessions**, **2 official records**, and the original **`2026-11-10` best times 57,280 / 72,864 ms**. The scan made only GET requests and did not modify Supabase.
+
+**Evidence handling:** The two screenshots remain attached in the private conversation; this public GitHub report contains no screenshots, secret values, request Authorization/cookie headers, raw response bodies, or user identifiers.
+
+**Updated release status:** Live application-generated anonymous `401`, authenticated uninvited `403` with zero protected leaderboard rows, permission checks, and the selected public-body secret-signature scan have **PASS** evidence. A final **limited read-only Network header/response exposure review** can close an additional security gap. Responsive manual testing was expressly scoped to **lobby-only** views; untested pages remain outside the verified visual coverage. Phase 3's overall production-release sign-off therefore remains **PARTIAL / not yet approved** unless remaining release checks are explicitly accepted and documented. No application code, Auth policies, database records, `main` or Production was changed by this documentation-only update.
