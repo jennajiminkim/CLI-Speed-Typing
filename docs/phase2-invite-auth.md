@@ -45,14 +45,7 @@ https://supabase.com/dashboard/project/zhfkjwduelavepjfacpo/auth/url-configurati
 
 ## Invite issuance (administrator only)
 
-Generate code **privately** with `openssl rand -hex 16`, and store its digest in the dedicated Supabase project:
-
-```sql
-insert into private.invite_codes(code_sha256,max_uses,expires_at)
-values (encode(sha256(convert_to(upper('REPLACE_WITH_32_HEX_CHARS'),'UTF8')),'hex'),1,now()+interval '14 days');
-```
-
-Do not commit actual invitation codes or email addresses. Distribute unique one-use codes privately. Revoke by setting `revoked_at`.
+Current format: 12 uppercase characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (60 bits of randomness). Generate privately with `node scripts/generate-invite-code.cjs`, then copy the generated **hashed SQL INSERT** into the dedicated project's SQL editor. Never commit or share the live code in chat. Use one code per friend, single-use, 14-day expiry.
 
 ## Live acceptance tests (not yet executed)
 
