@@ -427,3 +427,36 @@ The earlier ten-resource response-body signature scan additionally reported **`C
 **Updated security conclusion:** The essential live auth boundaries (`401 authentication_required`, `403 not_invited`, no uninvited ranking rows), database grants/RLS, selected public browser assets and targeted response-header checks now have **PASS** evidence. The comprehensive release audit remains scope-limited. Manual exact-resolution visual acceptance was explicitly limited by the user to the **lobby only**; remaining pages and result-button DOM measurements are unverified, rather than FAIL.
 
 **Release disposition remains undecided/PARTIAL** until the owner explicitly accepts documented exclusions and reviews other production requirements (including account-recovery/email-verification policy). This entry documents evidence only: no application code, policies, account state, `main`, or Production were modified.
+
+## Phase 3 Official Retry Race Condition Fix
+
+**Verdict: PASS for the reproduced Retry defect. READY FOR MERGE REVIEW within this fix scope.** Source commit [`fde7afd4f5fad703cf0c4c7f7374594c27b81a10`](https://github.com/jennajiminkim/CLI-Speed-Typing/commit/fde7afd4f5fad703cf0c4c7f7374594c27b81a10) on `feature/server-verified-ranking-phase3`. Baseline `89bc1de5f61d8ef97eea8e7ce3aa7c3e0ce1ea33`.
+
+### Root cause and correction
+
+The active run's queue was replaced on Retry, but in-flight callbacks from the previous queue could still write the shared `officialFailed` or `officialFinal` variables. An older rank lookup could also write its failure label into the new result screen. To reproduce, hold run A's tenth server response, start B with Retry, then reject the held A response. Before the fix, B completed locally with zero official step submissions.
+
+`dist/app.js` now captures the generation when each official step is queued. It checks that generation before starting the request and after awaiting the receipt. The rejection handler sets failure only for the matching generation. The result renderer validates its generation and view before reading shared results, and the rank lookup checks both on rejection as well as success. Steps in the current generation still use the same sequential queue, and failures from the current run still fail official verification.
+
+### Deterministic regression
+
+`node qa-official-retry.cjs` runs the actual app and engine with a synthetic clock, minimal DOM and deferred ranked-client promises. The identical six tests ran against unmodified and corrected app code. All ranked calls were mocked.
+
+| Scenario | Before | After |
+| --- | --- | --- |
+| A's last request rejects after Retry | FAIL, B sent 0 of 10 | PASS, B sent all 10 in order and rendered its own verified result |
+| A's successful receipt arrives in the same turn after B's receipt | FAIL, B displayed A's `00:15.12` | PASS, B displayed `00:22.34` and looked up B's day |
+| Current B step rejects | PASS, queued steps stopped and the UI showed verification failure | PASS, unchanged |
+| Normal official completion and Practice | PASS | PASS, official result verified and Practice sent no ranked requests or local-best update |
+| A has an unsent queued step after Retry | FAIL, stale step 10 was sent | PASS, stale step skipped and B verified normally |
+| A's rank lookup rejects after B is verified | FAIL, A replaced B's rank status | PASS, B's verified rank status remained |
+
+Node.js **v24.22.1**, all post-fix commands exited 0. `node test.cjs` **8/8**, `node qa-speedrun.cjs` **5/5**, `node test-auth.cjs` **9/9**, `node qa-phase3.cjs` **8/8**, and `node qa-official-retry.cjs` **6/6**, for **36 passed, 0 failed**. The new standalone suite was run directly without changing the existing CI workflow.
+
+### Preview and release scope
+
+Vercel showed **Ready**, environment **Preview**, and source commit `fde7afd` for the automatic branch deployment. [Pinned Preview](https://cli-speed-typing-etl9z1x7s-jennakim.vercel.app/) · [Vercel deployment details](https://vercel.com/jennakim/cli-speed-typing/HoShZYH1E8pseDdxhvmrBx3dPjMr).
+
+The pinned Preview loaded the lobby, switched Light → Night → Light, showed the Practice countdown beginning at 3, accepted commands 01–10, and rendered `PRACTICE COMPLETE` with time `00:14.74`, 100.0% accuracy, 10/10 commands, combo ×10 and no rank. Retry opened a new Practice run, and exiting and using Home returned to the lobby. The official race itself was verified in the deterministic Node harness. No new live official runs were started.
+
+Fresh-environment portability remains a separate follow-up. Four SQL migrations share the `20261110` version prefix. Reconcile distinct versions and application order with migration history before automating a fresh deployment. No migrations were renamed, rewritten or executed. No account, ranking data, `main` or Production changes were made. Production readiness remains a separate decision, including review of the required Production configuration.
