@@ -193,3 +193,111 @@ The Node execution environment was unavailable and GitHub reported no Actions wo
 | E04 — Mobile | No 390 × 844 CSS viewport or mobile navigation/keyboard test was available. No resized screenshots were used. | BLOCKED |
 
 **Release recommendation.** The copy defect is corrected at source and the branch is ready for Preview acceptance testing once access is available. Final user acceptance and Production release review are not ready to sign off. Verify the deployed copy and environment scope, run all four Node commands, close isolated authentication and live security checks, and complete the exact responsive matrix. No additional application defect was established in this round.
+
+## Phase 3 Integrated Final QA — Responsive, Security, Regression
+
+**Verdict: PARTIAL.** Node regression is 30/30, the live public configuration and signed-out ranking gate passed, and Supabase protections and historical official times were reconfirmed. Independent authentication, protected live API cases and the exact viewport matrix are still open.
+
+### Target and evidence
+
+- Starting feature HEAD and tested checkout: `16663ae01cb297ed434692fd4d47982abef6a75b`. Relative to copy commit `8b04789a0dc0839b53aea74117a675e52c8419ec`, only this QA report differs. The GitHub Vercel check was successful.
+- Tested live host: [Phase 3 Preview](https://cli-speed-typing-bhn4cde90-jennakim.vercel.app/). Remote Chrome showed the expected Phase 3 footer, corrected Auth disclaimer and corrected lobby notice. This matches the intended copy. Vercel management lookup for the exact host returned 404, so host-to-SHA binding was not independently established by deployment metadata.
+- Test date was November 10, 2026 in Seoul, as shown by the live leaderboard and Supabase. The browser evidence below is from an existing Work browser profile, without an app login during the check. Its measured document viewport was 1363 × 936 CSS px.
+- [Sanitized live screenshot, signed-out leaderboard](https://chatgpt.com/library?file_id=libfile_01bb6497eb9081919c6a97496d982fe4&account_id=personal). It shows `ACCESS DENIED`, no ranking rows and the Phase 3 footer.
+
+### A. Visual QA
+
+| Test | Expected | Actual | Verdict |
+| --- | --- | --- | --- |
+| V01 — 1366 × 768, Light and Night | Five readable screens and intact controls and layout | Exact browser viewport not available | BLOCKED |
+| V02 — 1440 × 900, Light and Night | Same, at exact dimensions | Exact browser viewport not available | BLOCKED |
+| V03 — 1597 × 900, Light and Night | Same, at exact dimensions | Exact browser viewport not available | BLOCKED |
+| V04 — 390 × 844, Light and Night | Login, 12-character invite input, play, result and ranking usable without horizontal overflow | Mobile viewport and keyboard behavior not exercised | BLOCKED |
+| V05 — Live smoke, 1363 × 936 | Corrected live copy and intact signed-out ranking screen | Corrected Auth, lobby and leaderboard footer observed. Screenshot confirms readable signed-out Light leaderboard in this viewport. Full five-screen and both-theme matrix was not run here. | PARTIAL |
+| V06 — Result geometry and artwork | 150 × 52 px buttons, 16 px horizontal gap, centered result. Topology and fonts remain visually intact | No new exact-size DOM measurement. Prior 1363 × 936 Practice measurements remain historical. Git diff confirms no CSS, font, or SVG changes since the copy commit. The topology geometry, fonts, artwork and sequential glow were not visually requalified across the requested matrix. | BLOCKED for exact visual measurements |
+
+Work's live browser interface provided no viewport override. A local Playwright Chromium attempt for the checked-out source stopped before any screen measurement with a process socket `Operation not permitted` error. No screenshots were resized or presented as exact-view evidence. No new visual defect was established.
+
+### B. Security QA
+
+| Test | Expected | Actual | Verdict |
+| --- | --- | --- | --- |
+| S01 — Fresh invited login and logout | Denied in clean profile, authorized after invite-member login, denied after logout | Existing Work profile returned the application’s `ACCESS DENIED` and zero ranking rows. Its independence cannot be established. No new login or logout was performed. Earlier signed-in and logout evidence remains above. | PARTIAL |
+| S02 — Application HTTP 401 | Both valid-shape anonymous POSTs return `401 authentication_required`, with no Supabase call or new record | Node loopback HTTP exercised the actual checked-out `ranked-start` and `ranked-step` handlers. Both returned `401 authentication_required` and made zero upstream calls. Same POSTs to the protected Preview returned Vercel `401 Protected deployment`. No existing authorized CLI or automation bypass was available. Official records and session count unchanged. | PASS for loopback, BLOCKED for live application-layer 401 |
+| S03 — Live authenticated uninvited 403 | Authenticated uninvited identity sees `403 not_invited`, denied leaderboard, zero direct ranking rows and no new session | Supabase reported zero accounts without active invitation membership. No authorized disposable identity was available or created. Earlier rollback-only database rejection stays separate. | BLOCKED |
+| S04 — RLS and privileges | Only active invited members read rankings, browser roles have no writes, server RPC or private session access | Read-only Supabase query confirmed RLS and active-member `SELECT` policy. Both `anon` and `authenticated` lack INSERT, UPDATE, DELETE, column writes, both ranked RPC EXECUTE grants, private schema USAGE and private-session SELECT. Three sessions and both active-member records remain, 57,280 and 72,864 ms on November 10, both 10 commands and `server-events-v1`. | PASS |
+| S05 — Exposure | Only publishable settings, no secret in deployed assets, responses, logs or exposed headers | Live `/api/public-config` returned only `key` and `url`; prefix was `sb_publishable_`, with no secret marker. Three captured console entries across leaderboard, auth and lobby had no secret, JWT or bearer pattern. A source scan of tracked `dist/` found no server-secret identifier or prefix. Deployed HTML/JS raw-body scan and response header inspection were not completed. | PARTIAL |
+
+### C. Automated QA
+
+Fresh detached checkout at the tested SHA, Work Linux shell, Node.js **v24.22.1**. All commands returned exit status 0.
+
+| Command | Passed | Failed |
+| --- | ---: | ---: |
+| `node test.cjs` | 8 | 0 |
+| `node qa-speedrun.cjs` | 5 | 0 |
+| `node test-auth.cjs` | 9 | 0 |
+| `node qa-phase3.cjs` | 8 | 0 |
+| **Total** | **30** | **0** |
+
+The static and mocked assertions cover the intended source and do not replace live authorization tests. No Mac Terminal rerun is needed for this commit.
+
+### Manual MacBook Verification — Remaining Items Only
+
+#### Safe user checks
+
+1. **Confirm deployment identity.** In Vercel, open **CLI Speed Typing → Deployments**, select the deployment with host `cli-speed-typing-bhn4cde90-jennakim.vercel.app`, and open **Source**. PASS if the feature branch and `16663ae` or the code-equivalent `8b04789` are shown. If a different SHA appears, share the SHA and stop this QA until the diff is reconciled. Evidence is a screenshot of Source and Domains with any private identifiers cropped. Requires access to this Vercel project.
+2. **V01–V04 and V06, exact viewport and themes.** In Mac Chrome, open the intended Preview. Press **⌥⌘I** to open Developer Tools, then **⇧⌘M** to toggle Device Toolbar. Select **Responsive** and enter each width and height exactly, **1366 × 768**, **1440 × 900**, **1597 × 900**, then **390 × 844**. In Console, check `[innerWidth, innerHeight, document.documentElement.scrollWidth]`. Match the first two values to the selected size and check the third is no larger than the first. For each size, select Light and Night from the lobby, then check lobby, game, Practice result, `/auth.html` (including signup's empty 12-character field), and `/leaderboard.html`. Auth and ranking inherit the selected theme. Use Practice to avoid creating official records. Inspect topology lines and sequential glow, readable fonts, footer and controls. At mobile size also test tapping input and navigation, noting any physical-keyboard requirement separately. On each result screen use this read-only Console expression:
+
+   ```js
+   (() => {
+     const a = document.querySelector('#retry').getBoundingClientRect();
+     const b = document.querySelector('#back').getBoundingClientRect();
+     return {
+       viewport: [innerWidth, innerHeight],
+       retry: [a.width, a.height], home: [b.width, b.height],
+       gap: b.left - a.right, sameRow: Math.abs(a.top - b.top) < 1
+     };
+   })()
+   ```
+
+   PASS if the specified size is measured, both buttons are 150 × 52 with a 16 px horizontal gap and aligned in the approved desktop layout, and screens have no unintended overflow, clipping, overlap or broken navigation. Record any intentional narrow-screen wrap separately. FAIL if a control is unreachable, content is clipped or geometry differs unexpectedly. Supply screenshots showing the Device Toolbar dimensions plus the result measurements, and a short recording for any topology animation or mobile input issue. Requires Preview access and an invited login for the populated ranking layout.
+
+3. **S01, isolated login and logout.** In Chrome, click the profile icon → **Add Chrome profile** → continue without syncing. Open the intended Preview. If Vercel asks, sign in with your authorized Vercel account first. In that new profile visit `/leaderboard.html` before signing into the app, then visit `/auth.html` and sign in with an existing invited member account. Return to the leaderboard, then log out from the Auth page and reopen the leaderboard. PASS if the initial and final states show `ACCESS DENIED` with no ranking rows and the middle state allows access without a new invitation. The list can be empty on a new Seoul calendar day. FAIL if rows appear before login or after logout, or an active invited account is refused. Share a short sequence of screenshots with the states and Seoul date visible, with emails and nicknames masked. Requires an existing invited account. Token revocation is a separate test.
+
+#### Authorized engineering checks
+
+4. **S02, application HTTP 401.** On Mac Chrome, use a profile authorized at Vercel and signed out of CLI Speed Typing. Open the intended Preview, then **⌥⌘I → Console**. Read and run the code below only while the address bar shows the intended Preview. It sends the browser's existing same-origin Vercel access cookies and supplies no application authorization header.
+
+   ```js
+   for (const [path, body] of [
+     ['/api/ranked-start', {}],
+     ['/api/ranked-step', {
+       run_id: '00000000-0000-4000-8000-000000000000',
+       step: 1,
+       command: 'qa-test'
+     }]
+   ]) {
+     const res = await fetch(path, {
+       method: 'POST', credentials: 'same-origin',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify(body)
+     });
+     const result = await res.json().catch(() => ({}));
+     const error = result.error;
+     const reason = typeof error === 'string' &&
+       ['authentication_required', 'not_invited'].includes(error)
+       ? error
+       : error?.message === 'Protected deployment' ? 'Vercel edge' : 'other';
+     console.log(path, res.status, reason);
+   }
+   ```
+
+   PASS if both lines read `401 authentication_required` and a read-only Supabase count confirms no new official sessions or records. An edge rejection, redirect, or HTML response means BLOCKED. A ranked session on a request without application credentials is FAIL. Send only the two output lines and before/after counts. Leave Deployment Protection enabled.
+
+5. **S03, authenticated uninvited HTTP 403.** A project owner must first identify an already authorized disposable Auth account with no active invitation. If none exists, leave BLOCKED pending separate approval for provisioning. In its separate browser profile, sign in through the app. If the UI cannot establish such a session, an authorized engineer should use the normal Supabase client sign-in flow in a private test runner and keep its bearer token in process memory. Use that session to POST `/api/ranked-start`, open `/leaderboard.html`, and query `ranked_runs` using the publishable client with the test account session. PASS if the app returns `403 not_invited`, the UI denies, the Data API returns zero protected rows and the session count remains unchanged. FAIL if the account can start a ranked run or see protected rows. Send status, sanitized error, result count, and denial screenshot only. Member A/B, service credentials, and policy settings must stay out of this test.
+6. **S05, deployed assets and response headers.** In authorized Chrome, open **Developer Tools → Network → Preserve log** and reload each of the lobby, auth and leaderboard. Review the Document, JS and Fetch/XHR responses and the Console. Search response bodies for server-secret patterns such as `sb_secret_` and `CLI_SUPABASE_SECRET_KEY`. Inspect **Response Headers** for leaked application bearer or private key values. Normal browser request cookies and the publishable key are outside this leak criterion. PASS if no server-only credential appears in any checked surface and `/api/public-config` exposes only the expected public settings. FAIL on any actual exposed secret. An extension-blocked response is BLOCKED and may be retried once in the clean profile. Provide an asset/route checklist and redacted status summary only. Do not attach HAR files, raw headers, response bodies or unredacted console logs.
+
+### E. Final assessment
+
+Core gameplay and official ranking remain suitable for functional user acceptance. **Security QA and exact responsive QA are incomplete, so Production release is not recommended yet.** The open items are evidence gaps rather than demonstrated auth bypass or visual regressions. No application code, DB policies, users or official records were modified. GitHub main and Production were outside the change scope.
