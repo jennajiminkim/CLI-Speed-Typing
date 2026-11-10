@@ -321,3 +321,21 @@ Core gameplay and official ranking remain suitable for functional user acceptanc
 **Remaining responsive test cases:** Repeat visual/functional checks at each exact viewport in the gameplay screen, Practice result, authentication, and protected Friends Leaderboard; inspect mobile navigation/input and keyboard access; measure the result buttons at **150 × 52 CSS px** with **16 px** gap on the approved desktop geometry; and obtain a read-only `innerWidth/innerHeight/scrollWidth` check where feasible. The broader STEP 2 verdict therefore remains **PARTIAL**, even though the **eight lobby-theme screenshots pass their own visual checks**.
 
 **Release scope:** Documentation-only supplement. No UI/game/Auth changes, no Supabase writes, no Production deployment, no `main` merge.
+
+
+### Manual Mac Chrome authentication follow-up — additional profile (2026-11-11, 00:19–00:20 KST)
+
+**Scope and provenance:** The user reports using a new, separate Chrome profile and provided **three screenshots** from the corrected Phase 3 Preview (`cli-speed-typing-bhn4cde90-jennakim.vercel.app`). These are user-supplied screenshots rather than independent cookie/storage inspection, network traces, or automated browser-profile creation. No screenshots or private member names are added to the public repository.
+
+| Observed state | Evidence | Verdict |
+| --- | --- | --- |
+| Existing invited account is authenticated | The `/auth.html` screenshot displays `03 / ACCESS GRANTED`, an invitation-registered message, and links for the leaderboard and logout. | **PASS — invited login / authorization** |
+| Authenticated leaderboard accessible | The `/leaderboard.html` screenshot displays the signed-in invitation confirmation, an authorized leaderboard table and `랭킹 조회 권한이 확인되었습니다.` (ranking-view permission confirmed). | **PASS — authorized ranking access** |
+| Current-day leaderboard is empty | Leaderboard shows `2026-11-11 · ASIA/SEOUL` and the new accurate empty-state copy. This is expected because the two preserved prior bests were recorded on `2026-11-10`. | **PASS — current-day empty display is not evidence of record deletion** |
+| Logout removes UI access | The subsequent `/leaderboard.html` screenshot shows `ACCESS DENIED` and no protected ranking rows. The user identifies this capture as being taken after using the app's logout control. | **PASS — user-observed logout and UI denial** |
+| Genuinely isolated initial profile state | The user states the test was performed in a newly added Chrome profile. No independent cookie/localStorage inventory or initial pre-login `ACCESS DENIED` screenshot was supplied. | **USER-ATTESTED; initial unauthenticated precondition not independently captured** |
+| Expired/revoked bearer tokens | Not exercised; logout UI denial cannot establish revocation of previously issued tokens. | **NOT TESTED** |
+
+**Updated authentication conclusion:** Previously blocked real-browser invited login and logout are now **PASS for the states actually observed**, with user-attested separate-profile provenance. The stricter fully instrumented clean-profile lifecycle (initial no-session proof, token invalidation) is **PARTIAL / unverified**. Browser-visible absence of the November 10 results on November 11 is the expected daily date filter and is not an application failure.
+
+**Remaining release QA:** Live protected Preview application-level anonymous `401`; authenticated uninvited `403`; deployed asset/response secret-exposure scan; and untested non-lobby responsive screen/DOM measurements remain as previously described. The user has chosen to limit the manual exact-viewport visual review to the lobby only. This is a **documentation-only** update; it does not imply approval to merge, change Auth/RLS, or deploy Production.
