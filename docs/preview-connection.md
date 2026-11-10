@@ -17,3 +17,7 @@
 6. Check Supabase Security Advisor and session/RLS permissions. Complete user A/B tests before merging.
 
 **Important:** a code precheck does not reserve the invitation, and Supabase Auth itself may allow account creation without a code. Only member authorization is invite-gated. Ranked writes stay completely disabled until Phase 3 server verification.
+
+## 12-character format — 2026-11-10
+
+The Preview uses 12-character invite codes (`ABCDEFGHJKLMNPQRSTUVWXYZ23456789`) after commit of the short-code patch. Run `node scripts/generate-invite-code.cjs` privately to generate a code and hashed SQL insert. No previously issued invites existed at change time. Keep `main` and Production unchanged.

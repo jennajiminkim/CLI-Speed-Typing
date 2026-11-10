@@ -30,9 +30,10 @@
     </form>
     <form id="inviteForm" hidden>
       <h2 class="pixel">01 / INVITE CODE</h2>
-      <p>친구에게 받은 32자리 초대 코드를 입력해주세요.</p>
+      <p>친구에게 받은 12자리 초대 코드를 입력해주세요.</p>
       <label for="inviteCode">초대 코드</label>
-      <input id="inviteCode" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" pattern="[A-Fa-f0-9]{32}" required>
+      <input id="inviteCode" class="authCodeInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" pattern="[A-HJ-NP-Za-hj-np-z2-9]{12}" aria-describedby="inviteCodeHint" required>
+      <small class="authCodeHint" id="inviteCodeHint">영문·숫자 12자리 · I, O, 0, 1 제외</small>
       <button class="primary authSubmit" type="submit">초대 코드 확인 →</button>
     </form>
     <form id="signupForm" hidden>
@@ -50,7 +51,8 @@
       <p>계정은 있으나 친구 랭킹 참여 권한이 없습니다. 초대 코드를 등록해야 이용할 수 있습니다.</p>
       <form id="claimForm">
         <label for="claimInvite">초대 코드</label>
-        <input id="claimInvite" type="text" autocomplete="off" spellcheck="false" maxlength="32" pattern="[A-Fa-f0-9]{32}" required>
+        <input id="claimInvite" class="authCodeInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" pattern="[A-HJ-NP-Za-hj-np-z2-9]{12}" aria-describedby="claimInviteHint" required>
+        <small class="authCodeHint" id="claimInviteHint">영문·숫자 12자리 · I, O, 0, 1 제외</small>
         <label for="claimNickname">랭킹 닉네임</label>
         <input id="claimNickname" type="text" autocomplete="nickname" minlength="2" maxlength="16" pattern="[A-Za-z0-9가-힣_-]{2,16}" required>
         <button class="primary authSubmit" type="submit">초대 등록 →</button>

@@ -32,7 +32,7 @@ function busy(form,value) {
   const button=form.querySelector('button[type=submit]');
   if(button) button.disabled=value;
 }
-function validCode(s){return /^[A-Fa-f0-9]{32}$/.test(s);}
+function validCode(s){return /^[A-HJ-NP-Z2-9]{12}$/.test(s);}
 function validName(s){return /^[A-Za-z0-9가-힣_-]{2,16}$/.test(s);}
 async function memberOf(user) {
   const {data,error}=await client.from('invite_members')
@@ -77,6 +77,9 @@ byId('tabSignup').onclick=()=>{resetInvite();panel('invite');};
 byId('changeInvite').onclick=()=>{resetInvite();panel('invite');};
 byId('claimSignout').onclick=logout;
 byId('memberSignout').onclick=logout;
+for(const id of ['inviteCode','claimInvite']){
+  byId(id).addEventListener('input',ev=>{ ev.target.value=ev.target.value.toUpperCase(); });
+}
 
 forms.login.addEventListener('submit',async ev=>{
   ev.preventDefault();
@@ -98,7 +101,7 @@ forms.invite.addEventListener('submit',async ev=>{
   ev.preventDefault();
   if(!client) return message('인증 서비스가 준비되지 않았습니다.',true);
   const code=byId('inviteCode').value.trim().toUpperCase();
-  if(!validCode(code)) return message('초대 코드는 32자리 16진수 문자로 입력해주세요.',true);
+  if(!validCode(code)) return message('초대 코드는 영문·숫자 12자리입니다. I, O, 0, 1은 사용하지 않습니다.',true);
   busy(forms.invite,true);
   try {
     if(!(await checkCode(code))) {
@@ -157,7 +160,7 @@ byId('claimForm').addEventListener('submit',async ev=>{
   const code=byId('claimInvite').value.trim().toUpperCase();
   const nickname=byId('claimNickname').value.trim();
   if(!validCode(code)||!validName(nickname))
-    return message('초대 코드는 32자리 16진수, 닉네임은 2–16자로 입력해주세요.',true);
+    return message('초대 코드는 영문·숫자 12자리(I, O, 0, 1 제외), 닉네임은 2–16자로 입력해주세요.',true);
   const form=byId('claimForm');
   busy(form,true);
   try{

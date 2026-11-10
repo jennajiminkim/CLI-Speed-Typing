@@ -35,3 +35,22 @@
 .authPage footer{margin-top:auto}
 .authPage [hidden]{display:none!important}
 @media(max-width:620px){.authHeader{margin:0 10px;padding:12px 6px}.authEyebrow{display:none}.authMain{padding:25px 14px 45px}.authCard{padding:20px}.authBrand{font-size:16px}.authBack{font-size:11px}}
+
+/* Compact 12-character invitation field — retro typography preserved in Light/Night. */
+#inviteForm .authCodeInput,#claimForm .authCodeInput{
+  width:min(100%,312px);justify-self:center;
+  height:55px;text-align:center;text-transform:uppercase;
+  font-family:TopologyPixel,'Courier New',monospace;
+  font-size:clamp(15px,3vw,19px);letter-spacing:.13em;
+  border:2px solid var(--line);border-radius:4px;
+  font-variant-numeric:tabular-nums;
+}
+#inviteForm .authCodeInput:focus-visible,#claimForm .authCodeInput:focus-visible{border-color:var(--blue)}
+#inviteForm .authCodeHint,#claimForm .authCodeHint{
+  display:block;justify-self:center;color:var(--muted);
+  font-size:11px;line-height:1.5;text-align:center;
+}
+#inviteForm .authSubmit,#claimForm .authSubmit{
+  width:min(100%,312px);justify-self:center;
+}
+@media(max-width:360px){#inviteForm .authCodeInput,#claimForm .authCodeInput{font-size:15px;letter-spacing:.09em}}

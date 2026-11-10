@@ -76,3 +76,16 @@ Do not commit actual invitation codes or email addresses. Distribute unique one-
 - Hardening against email impersonation, account recovery abuse and registration flooding.
 
 Do not merge into `main` or expose to general users until live tests and security review are done.
+
+
+## Invitation format update — 12 characters (2026-11-10)
+
+The latest development branch uses **12-character uppercase codes** from a 32-symbol alphabet: `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`. I, O, 0 and 1 are excluded for legibility in the retro font. A secure uniformly generated code contains **60 bits** of randomness. The earlier 32-hex format is no longer accepted after migration `supabase/migrations/20261110_invite_short_codes.sql`. No invite codes had been issued in the dedicated project when this change was prepared.
+
+The invite and claim input widths are limited to **312 CSS pixels** (responsive down to available mobile width), including their action buttons; other signup and game controls remain unchanged.
+
+### Generate a one-use invitation locally
+
+In a private terminal at the repository root, run `node scripts/generate-invite-code.cjs`. It prints a random 12-character code (share privately) and an `INSERT` SQL statement containing only the **SHA-256 digest**. Run that SQL in the project's private Supabase SQL Editor. Never commit or paste the secret code or terminal output into this public GitHub repository. Use one code per person, single-use and 14-day expiry by default.
+
+The existing authenticated `claim_invite` RPC still enforces one-use atomic consumption and a per-account attempt limit. The public precheck does **not** yet have server-side per-IP rate limiting; before expanding beyond a small trusted group, add gateway rate limiting and abuse monitoring. Prechecking a code does not reserve it; it is consumed only after a successful authenticated claim.
