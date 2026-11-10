@@ -83,7 +83,7 @@ Both rows had `command_count=10`, `verification_version=server-events-v1`, and d
 | Correct ascending ordering by official time | **PASS** | Row 1: 57,280 ms; Row 2: 72,864 ms |
 | Browser times correspond to server's official records | **PASS** | Values matched direct Supabase readback |
 | Two consecutive captures retain the same order, rows and count | **PASS** | Both provided screenshots visibly identical for relevant data |
-| Explicit browser refresh action independently instrumented | **NOT INDEPENDENTLY OBSERVED** | User supplied before/after captures in response to the refresh instructions; a still screenshot cannot itself prove the reload event. If strict instrumented confirmation is required, a browser trace or user confirmation is needed |
+| Browser refresh and post-reload record persistence observed in video | **PASS — visual reload and persistence** | Subsequent user-supplied screen recording captures the leaderboard briefly resetting/reloading and the same two records repopulating; this supersedes the earlier screenshot-only limitation, though the exact keyboard shortcut is not independently logged |
 | Clean, newly authenticated session (not a new tab sharing existing session) | **NOT TESTED** | Neither screenshot proves a new isolated browser authentication |
 | Two-user visual layout at the pictured desktop viewport | **PASS** | No row overlap or clipping visible in provided captures |
 | All prescribed desktop viewports and Night theme | **PARTIAL** | Not captured for this follow-up |
@@ -91,3 +91,27 @@ Both rows had `command_count=10`, `verification_version=server-events-v1`, and d
 **Updated functional verdict:** **PASS** for Phase 3's core multi-user Daily Leaderboard user-acceptance requirement (two genuinely invited accounts, server persistence, correct same-day ordering, and shared authorized display). **Full Phase 3 negative-security, fresh-session, exact-viewport and cross-day regression coverage remains PARTIAL.** The new evidence does not retroactively turn unexecuted tests into PASS.
 
 **Release boundary:** Documentation update only in `feature/server-verified-ranking-phase3`. No credential exposure, account changes, Supabase writes, GitHub `main` changes, or Vercel Production release.
+
+
+### Follow-up user acceptance — recorded browser refresh (2026-11-10, about 22:30 KST)
+
+**Verdict: PASS — visibly reloaded leaderboard retains both rankings.** The user supplied a ~22-second Mac Chrome screen recording (`.mov`) showing the same Phase 3 Preview leaderboard while signed in as an authorized invited member. Review of time-separated frames found:
+
+- **Before reload (~0–2 s):** the leaderboard displays two rows, A in 1st at `00:57.28` and B in 2nd at `01:12.86`, along with the server-verified total of 2.
+- **During reload (~2.7–3.1 s):** the page reinitializes: the ranked result area temporarily disappears and the content is not yet populated, consistent with a browser page reload and a new data request. A keyboard shortcut was not instrumented separately, so the exact `⌘+R` keystroke is not a direct artifact.
+- **After reload (~3.3–5 s and subsequent frames):** the same two ranking rows, names, time values, and server-verified count of 2 are repopulated in the same order. This persists in later frames.
+
+**Cross-check:** A read-only query against the dedicated Supabase project again returned both `2026-11-10` official daily records, `57280` and `72864` ms in ascending order, both with active invitation memberships, `command_count=10`, and `verification_version=server-events-v1`. No database changes were made.
+
+| Follow-up requirement | Final verdict | Evidence |
+| --- | --- | --- |
+| Same authorized browser sees both members before reload | **PASS** | User video, pre-reload frames |
+| Leaderboard visibly reinitializes and reloads | **PASS** | User video, transient unpopulated page state |
+| Two server-verified rows remain after reloading | **PASS** | User video, post-reload frames |
+| Correct fastest-first order and exact persisted times survive reload | **PASS** | Video and Supabase readback |
+| Separate, freshly authenticated user session | **NOT TESTED** | Existing session was used |
+| Exact desktop viewport matrix and Night visual checks | **PARTIAL** | Not covered by this follow-up video |
+
+The source recording stays attached to the user conversation; **it is not committed or shared in the public GitHub repository**. The report retains sanitized outcomes without secrets, session tokens, user identities or private media.
+
+**Updated Phase 3 functional conclusion:** The central multi-user, asynchronous daily leaderboard is **PASS**, including observable reload and persistence. The overall Phase 3 release/security/regression matrix remains **PARTIAL** until its separately listed checks are completed. This is a **documentation-only update** on `feature/server-verified-ranking-phase3`; no `main` merge, Production deployment, or Supabase writes.
