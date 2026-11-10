@@ -357,3 +357,24 @@ The screen capture also shows Chrome's native `POST ... 401 (Unauthorized)` diag
 **Evidence provenance:** Screenshot supplied in the conversation on `2026-11-11` at approximately `00:43 KST`, reviewed visually. No raw secrets, member identifiers, credentials, browser storage, or screenshot files were committed to public GitHub. The source test snippet remained local to the user's Chrome profile.
 
 **Remaining release items:** Authenticated **uninvited** live `403 not_invited` and data-read denial; comprehensive live asset/response secret-exposure sweep; and any release-required responsive checks beyond the user-approved lobby-only screenshots. The full Phase 3 pre-release QA verdict stays **PARTIAL** until the remaining release gates are addressed. No app code, Supabase policies or records, GitHub `main`, or Vercel Production changed in this documentation-only follow-up.
+
+
+### Manual Mac Chrome security follow-up — live invited-only 403 (2026-11-11)
+
+**Verdict: PASS — authenticated but uninvited users cannot start official ranked runs or read protected leaderboard rows.** Two user-supplied screenshots show the actual protected Phase 3 Preview (`cli-speed-typing-bhn4cde90-jennakim.vercel.app`) in Chrome at approximately **01:02–01:03 KST on 2026-11-11**. The test used a separately created, valid Supabase Auth account **without an active invitation**, rather than changing Member A/B. No invitation code was claimed.
+
+| Test | Observed browser evidence | Verdict |
+| --- | --- | --- |
+| Valid login session without invitation | `INVITE VERIFICATION` form shown; sanitized snippet reports `AUTH: valid / INVITATION: inactive` | **PASS** |
+| Server-side invited-only ranked start | Real `POST /api/ranked-start` returned **HTTP 403**, JSON error **`not_invited`** (not an edge `Protected deployment` response) | **PASS** |
+| Direct Data API access to official ranked rows | Authenticated read-only client query reported **`RANKING READ: 0 visible rows`** | **PASS** |
+| Protected Friends Leaderboard UI | Direct `/leaderboard.html` navigation showed **`ACCESS DENIED`** and status **`유효한 초대 권한이 없습니다.`** | **PASS** |
+| Persisted data unaffected | Read-only Supabase check after test found **3 ranked sessions**, **2 official best records**, with `2026-11-10` elapsed times **57,280 ms** and **72,864 ms** | **PASS** |
+
+The independent read-only Supabase user/membership count returned **3 authenticated accounts**, **1 lacking active invitation**. The created disposable test identity was **left unchanged**, not deleted or granted an invitation during QA. The API denial and zero-visible-row check are browser/runtime evidence, not only static code/RLS evidence.
+
+The Chrome console also displayed a `Multiple GoTrueClient instances detected` warning, consistent with the one-off QA snippet creating an additional client alongside the application's own instance. It did not invalidate the observed `403` and RLS query result; no conclusion about general production behavior is drawn from that warning. An unrelated `favicon.ico` `404` was observed in Console and does not indicate an authorization failure.
+
+**Evidence handling:** Original screenshots remain attached to the conversation. The public report includes only sanitized outcomes, not the screenshot images, user emails, user IDs, passwords, invitation values, bearer tokens, or private response headers.
+
+**Updated security QA status:** The previously blocked **live authenticated-uninvited HTTP 403**, Data API row denial, and UI denial are now **PASS**, in addition to the earlier live unauthenticated API **401** PASS and the established database write/RPC protections. Remaining independent production-release coverage is **a comprehensive deployed-asset/response secret-exposure sweep** and any still-required non-lobby responsive/visual checks (the user explicitly scoped manual viewport screenshots to the lobby). Overall Phase 3 pre-release QA remains **PARTIAL** pending release acceptance decisions. This change is documentation-only on the feature branch; no application code, Auth/RLS setting, database record, `main`, or Production was changed.
