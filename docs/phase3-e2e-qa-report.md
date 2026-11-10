@@ -115,3 +115,50 @@ Both rows had `command_count=10`, `verification_version=server-events-v1`, and d
 The source recording stays attached to the user conversation; **it is not committed or shared in the public GitHub repository**. The report retains sanitized outcomes without secrets, session tokens, user identities or private media.
 
 **Updated Phase 3 functional conclusion:** The central multi-user, asynchronous daily leaderboard is **PASS**, including observable reload and persistence. The overall Phase 3 release/security/regression matrix remains **PARTIAL** until its separately listed checks are completed. This is a **documentation-only update** on `feature/server-verified-ranking-phase3`; no `main` merge, Production deployment, or Supabase writes.
+
+## Final Fresh Session, Live HTTP Security & Responsive UI Verification
+
+**Overall verdict: PARTIAL.** Real invited-member login and logout worked. Database permissions, expired-session rejection and record preservation were confirmed. Independent browser-profile provenance, the application-layer HTTP denials and the requested exact responsive matrix remain open.
+
+### Test target and baseline
+
+- [Vercel Preview](https://cli-speed-typing-25i1yvwbq-jennakim.vercel.app/) from implementation commit `391e63e631a7b69be13d0ed853451840deebbb37`.
+- Seoul date during the browser and database checks was **2026-11-10**. Baseline and post-check totals were **3 ranked sessions and 2 official records**. Both official rows retained their 10-command, `server-events-v1` records at `57280` and `72864` ms.
+- Preview protection remained enabled. No account, invitation, authentication configuration, ranking row, gameplay, or application code was changed by QA. The temporary expired-session fixture was rolled back. No deployment, promotion, or branch merge was performed.
+
+### A — Authentication
+
+| Test | Procedure and expected result | Actual evidence | Verdict |
+| --- | --- | --- | --- |
+| A01 — Login and leaderboard | Start unauthenticated, sign in with an existing invited account, retrieve both same-day records without a new invite. A demonstrably fresh browser context is required. | Remote Chrome at 1363 × 936 started with an empty tab inventory. Direct `/leaderboard.html` initially showed `ACCESS DENIED`. Used the email/password secure login prompt with the invited account. The leaderboard then showed invitation confirmation and rows `1 / 00:57.28` and `2 / 01:12.86`. No invite or injected authentication state was used. The browser binding did not provide independent profile creation or an initial cookie/storage inventory, so tab inventory does not prove storage isolation. | PARTIAL |
+| A02 — Logout and isolation | Use app logout, revisit leaderboard, repeat in a never-authenticated independent context. | Clicked the visible logout control on `/auth.html`, observed the login form, then navigated directly to `/leaderboard.html`. It showed `ACCESS DENIED` and the table held 0 rows. Both records remained in Supabase. The additional independent context and previous-token revocation were not tested. | PARTIAL |
+
+### B — HTTP and database security
+
+| Test | Procedure and expected result | Actual evidence | Verdict |
+| --- | --- | --- | --- |
+| B01 — Unauthenticated ranked POSTs | Credential-free HTTPS client sends JSON `{}` to `/api/ranked-start` and JSON with a syntactically valid non-member fixture UUID, step 1, and placeholder command to `/api/ranked-step`. Expect application `401 authentication_required`. | Both live POSTs returned HTTP `401`, JSON error code `401`, message `Protected deployment`. Vercel rejected the requests at the deployment edge. Application handler status remains unverified in live HTTP. Session and ranking counts stayed unchanged. The automated missing-bearer handler test also passed, with mocked dependencies. | PARTIAL |
+| B02 — Authenticated without invitation | Sign in with a controlled uninvited identity. Expect application HTTP `403`, denied leaderboard, no protected Data API rows and no new ranked session. | Dedicated Supabase project had 0 Auth accounts without an active membership. No controlled disposable identity was available. No account was created. Earlier rollback-only RPC `42501 not_invited` evidence remains applicable at the database layer. | BLOCKED |
+| B03 — Direct write and credential protection | Inspect live roles, RLS and trusted RPC rights, and check public browser output for server credentials. | Live RLS enabled. The only ranking policy is active-member SELECT for `authenticated`. Neither `anon` nor `authenticated` has INSERT, UPDATE, DELETE, INSERT/UPDATE column grants or EXECUTE on either ranked RPC. `service_role` retains both RPC rights. Earlier runtime `42501` denials remain recorded. Live `/api/public-config` returned only `key` and `url` and the key matched the publishable prefix. A scan of the pinned `dist/` tree found no server-secret identifiers or key prefixes. Direct browser navigation to a deployed JS asset returned `ERR_BLOCKED_BY_CLIENT`, so a complete live asset and response sweep was not performed. No browser write probes were run. | PASS for database protection, PARTIAL for live exposure coverage |
+| B04 — Run integrity | Validate expired, invalid, duplicate, skipped, cross-account and uninvited requests, and confirm client time cannot control the result. | A newly executed rollback-only expired-session fixture returned `22023 run_inactive_or_missing` from the actual Supabase RPC. After rollback, 3 sessions and the 2 existing best times remained. Earlier live RPC evidence covers incorrect, duplicate, skipped, cross-owner, abandoned and uninvited cases. The re-run mocked API rejects caller identity and elapsed time overrides, and earlier genuine runs proved the official time matched the server timestamps. | PASS for evidenced RPC/handler behavior. End-to-end uninvited HTTP remains B02. |
+
+### C — Responsive and theme checks
+
+The live browser provided a measured **1363 × 936 CSS px** viewport. Exact viewport override and mobile emulation were not available through the browser interface used. Existing official records were preserved by exercising the Practice path for the new result geometry check.
+
+| Test | Actual result | Verdict |
+| --- | --- | --- |
+| C01 — 1366 × 768 | Exact viewport and its five-screen matrix were not exercised. | BLOCKED |
+| C01 — 1440 × 900 | Exact viewport and its five-screen matrix were not exercised. | BLOCKED |
+| C01 — 1597 × 900 | Exact viewport and its five-screen matrix were not exercised. | BLOCKED |
+| C02 — Light and Night | At 1363 × 936, the body theme class changed in the lobby, Practice game and result and was inherited by the login route on reload. Those screens showed no horizontal overflow in the measurements. The authorized two-row leaderboard was inspected in Light, and the denied leaderboard in Night. Full authenticated Night leaderboard coverage is open. | PARTIAL |
+| C03 — Result geometry | Completed Practice commands 01–10 through keyboard input. In both themes, button rectangles measured **150 × 52 CSS px** each, both at the same Y, with **16 px** gap and centered as a group. The Practice result rendered with the ranking and personal best placeholders. Official result presentation and local best behavior are supported by earlier evidence. Exact desktop geometry remains open. | PARTIAL |
+| C04 — 390 × 844 mobile | Login and the 12-character invitation form were visible at the available desktop viewport. Mobile overflow, software keyboard behavior, touch targets and mobile leaderboard were not exercised. | BLOCKED |
+
+The sanitized browser screenshots show both authenticated ranking rows, the denied state after logout, and the Practice result in Light and Night at the actual 1363 × 936 viewport. Screenshots are supplied separately from GitHub.
+
+### Findings and release decision
+
+- **Low severity, stale copy.** On the actual Preview authentication page the footer text says server ranking submission will be connected in a later stage, even though official runs already work. The leaderboard footer also displays `PENDING` on a populated leaderboard. A narrowly scoped copy update could remove the contradictory status before release.
+- Re-ran all four existing suites, **30/30 passed** (8 core, 5 Speedrun, 9 auth, 8 Phase 3). Static and mocked checks are supplementary to live verification.
+- The verified functional flows remain suitable for user acceptance checks. **Final QA sign-off and Production readiness are not established.** Close the independent fresh-profile/login/logout coverage, application-layer missing-auth and uninvited HTTP tests, deployed asset exposure review and the exact desktop/mobile matrix before release. No new authorization failure was demonstrated by the tests that reached the application or database.
