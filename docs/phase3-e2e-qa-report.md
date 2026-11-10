@@ -406,3 +406,24 @@ The public-config JSON object contained exactly the `key` and `url` properties, 
 **Evidence handling:** The two screenshots remain attached in the private conversation; this public GitHub report contains no screenshots, secret values, request Authorization/cookie headers, raw response bodies, or user identifiers.
 
 **Updated release status:** Live application-generated anonymous `401`, authenticated uninvited `403` with zero protected leaderboard rows, permission checks, and the selected public-body secret-signature scan have **PASS** evidence. A final **limited read-only Network header/response exposure review** can close an additional security gap. Responsive manual testing was expressly scoped to **lobby-only** views; untested pages remain outside the verified visual coverage. Phase 3's overall production-release sign-off therefore remains **PARTIAL / not yet approved** unless remaining release checks are explicitly accepted and documented. No application code, Auth policies, database records, `main` or Production was changed by this documentation-only update.
+
+
+### Manual Mac Chrome Network response-header follow-up — app.js and public-config (2026-11-11)
+
+**Verdict: PASS for the inspected `app.js` and `/api/public-config` response headers; comprehensive all-request header audit is not claimed.**
+
+The user supplied two Chrome DevTools Network screenshots from the authenticated-at-Vercel Phase 3 Preview (`https://cli-speed-typing-bhn4cde90-jennakim.vercel.app/`) on **2026-11-11**, approximately **01:28 and 01:31 KST**. Both screenshots show the **Headers → Response Headers** area; request headers were not expanded or shared. Evidence was visually reviewed, and the screenshots remain in the private conversation, **not committed to GitHub**.
+
+| Network response | What the browser showed | Finding |
+| --- | --- | --- |
+| `GET /app.js` | HTTP **304 Not Modified**, `Cache-Control: public, max-age=0, must-revalidate`, `Date`, `Etag`, `Server: Vercel`, `X-Vercel-Cache: HIT`, `X-Vercel-Id` | **PASS — no visible server secret or auth token in its six displayed response headers**; 304 cache reuse is not an authorization error |
+| `GET /api/public-config` | `Cache-Control: no-store, max-age=0`, `Content-Type: application/json; charset=utf-8`, `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`, ordinary Vercel cache/tracing headers, `X-Robots-Tag: noindex` | **PASS — no visible server-only key, bearer or private token in its displayed response headers** |
+| Public configuration body, inspected visually and previously scanned | JSON with only `url` (project endpoint) and `key` (the intended `sb_publishable_` prefix) | **PASS — intended publicly shareable configuration only**; the full publishable key is not reproduced |
+
+The earlier ten-resource response-body signature scan additionally reported **`CHECKED: 10`**, **`REVIEW REQUIRED: 0`**, **`NOT CHECKED: 0`**, with `PUBLIC CONFIG: EXPECTED FIELDS ONLY`. Taken together, these checks provide evidence for the intended public configuration and both selected sets of response headers. They are **not** proof that every uninspected API route, third-party request, authentication state, response header or arbitrary secret format is clean.
+
+**Data integrity recheck:** A read-only query returned **3 ranked sessions**, **2 official records**, and the unchanged **2026-11-10** completed times **57,280 / 72,864 ms**. No data was written for this test.
+
+**Updated security conclusion:** The essential live auth boundaries (`401 authentication_required`, `403 not_invited`, no uninvited ranking rows), database grants/RLS, selected public browser assets and targeted response-header checks now have **PASS** evidence. The comprehensive release audit remains scope-limited. Manual exact-resolution visual acceptance was explicitly limited by the user to the **lobby only**; remaining pages and result-button DOM measurements are unverified, rather than FAIL.
+
+**Release disposition remains undecided/PARTIAL** until the owner explicitly accepts documented exclusions and reviews other production requirements (including account-recovery/email-verification policy). This entry documents evidence only: no application code, policies, account state, `main`, or Production were modified.
