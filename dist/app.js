@@ -251,8 +251,8 @@ function init(){
   if(eligible&&completedRun){
     $('resultRankStatus').textContent='서버 확인 중…';
     officialQueue.then(async()=>{
-      if(officialFailed || !officialFinal || !officialFinal.complete)throw new Error('not_verified');
       if(generation!==runGeneration || view!=='result')return;
+      if(officialFailed || !officialFinal || !officialFinal.complete)throw new Error('not_verified');
       const verified=officialFinal;
       $('resultMode').textContent='SERVER VERIFIED RESULT';
       $('finalScore').textContent=formatTime(verified.elapsed_ms/1000);
@@ -264,6 +264,7 @@ function init(){
         if(rank){$('resultRank').textContent='#'+rank.rank;$('resultRankStatus').textContent='오늘의 친구 랭킹';}
         else {$('resultRankStatus').textContent='공식 기록 저장됨 · 순위 확인 필요';}
       } catch {
+        if(generation!==runGeneration || view!=='result')return;
         $('resultRankStatus').textContent='공식 기록 저장됨 · 순위 조회 실패';
       }
     }).catch(()=>{
@@ -282,12 +283,15 @@ function init(){
     const submittedAt=now(),submittedCommand=target(),result=e.submit(submittedCommand);
     if(!result){$('inputState').textContent='문구를 끝까지 정확하게 입력해주세요.';return}
     if(officialRun&&!e.practice&&!officialFailed){
-      const runId=officialRun,step=e.index;
+      const runId=officialRun,step=e.index,generation=runGeneration;
       officialQueue=officialQueue.then(async()=>{
-        if(officialFailed)return;
+        if(generation!==runGeneration||officialFailed)return;
         const receipt=await window.CLI_RANKED.step(runId,step,submittedCommand);
+        if(generation!==runGeneration)return;
         if(step===bank.length)officialFinal=receipt;
-      }).catch(()=>{officialFailed=true;});
+      }).catch(()=>{
+        if(generation===runGeneration)officialFailed=true;
+      });
     }
     lastJudgment=result.toUpperCase();judgment(lastJudgment);
     if(e.index===bank.length){finish(false,submittedAt);return}
