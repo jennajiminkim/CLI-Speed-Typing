@@ -162,3 +162,34 @@ The sanitized browser screenshots show both authenticated ranking rows, the deni
 - **Low severity, stale copy.** On the actual Preview authentication page the footer text says server ranking submission will be connected in a later stage, even though official runs already work. The leaderboard footer also displays `PENDING` on a populated leaderboard. A narrowly scoped copy update could remove the contradictory status before release.
 - Re-ran all four existing suites, **30/30 passed** (8 core, 5 Speedrun, 9 auth, 8 Phase 3). Static and mocked checks are supplementary to live verification.
 - The verified functional flows remain suitable for user acceptance checks. **Final QA sign-off and Production readiness are not established.** Close the independent fresh-profile/login/logout coverage, application-layer missing-auth and uninvited HTTP tests, deployed asset exposure review and the exact desktop/mobile matrix before release. No new authorization failure was demonstrated by the tests that reached the application or database.
+
+## Phase 3 Pre-Release Final Refinement & Remaining QA
+
+**Verdict: PARTIAL.** The copy corrections are on the Phase 3 branch, GitHub recorded a successful Vercel check for the source commit, and the Supabase permissions and official records were verified again. The protected deployment and browser checks still require an authorized browser/runtime.
+
+### Source and deployment
+
+- Starting branch HEAD matched `c857912616b7d44302f7e537325d1799aba51575`. GitHub comparison reported identical, with no newer commits to reconcile.
+- Source commit [`8b04789`](https://github.com/jennajiminkim/CLI-Speed-Typing/commit/8b04789a0dc0839b53aea74117a675e52c8419ec) changes only HTML text in `dist/auth.html`, `dist/leaderboard.html`, and `dist/index.html`. It replaces the auth disclaimer, the authorized current-day empty message, and the leaderboard footer. The two additional lobby text edits remove the claim that official ranking is disconnected and direct users to the Friends Leaderboard. Local-only records and unavailable ghost features retain their separate treatment.
+- The existing `rankContent` and `rankEmpty` hidden markup and `rankEmpty.hidden = runs.length > 0` behavior remain intact. Authentication, queries, styles, art, assets, timer, gameplay, and existing test files have no changes in the GitHub diff.
+- GitHub returned **Vercel / success** for the source commit with [deployment details](https://vercel.com/jennakim/cli-speed-typing/6LPKu8ZrV2wcDguJCgpgGdMwVGFE), establishing that the existing Git integration ran. The Vercel connector listed no matching project and returned 404 on scoped project/deployment inspection. The exact new Preview host, deployment Ready metadata and visible copy were therefore not independently verified. The previous verified URL is [the earlier Preview](https://cli-speed-typing-25i1yvwbq-jennakim.vercel.app/) and was not used as evidence for the new copy. Environment scopes for `CLI_SUPABASE_URL`, `CLI_SUPABASE_PUBLISHABLE_KEY`, and `CLI_SUPABASE_SECRET_KEY` could not be verified on the new deployment. No manual deployment, promotion, environment edit or merge was performed.
+
+### Regression evidence
+
+The Node execution environment was unavailable and GitHub reported no Actions workflow runs for the source commit. The four requested `node` commands could not be run. A supplemental V8 execution used the existing scripts and a minimal in-memory CommonJS/Node compatibility harness against the reviewed source. All 8 assertions in `test.cjs` and all 8 static/mocked checks in `qa-phase3.cjs` passed in that harness. `qa-speedrun.cjs` and `test-auth.cjs` were not rerun. The historical 30/30 Node result above remains baseline evidence only.
+
+### Remaining QA matrix
+
+| Test | Actual evidence and limitation | Verdict |
+| --- | --- | --- |
+| C01 — Independent login | No authorized browser runtime was available for a fresh profile, invite sign-in or retrieval on the corrected deployment. The earlier signed-in session is retained as historical evidence only. | BLOCKED |
+| C02 — Logout and session isolation | No new browser logout or second-context check. Earlier UI logout evidence remains recorded. No token revocation claim. Both official records were verified in Supabase. | BLOCKED for new browser check |
+| D01 — Application-layer unauthenticated POSTs | No authorized Vercel browser or supported automation bypass was available. Earlier edge-generated 401 and supplemental mocked handler assertions do not establish an application-generated live `401 authentication_required` on this deployment. | BLOCKED |
+| D02 — Uninvited application session | Live database inspection found zero Auth identities without an active invitation membership. No user-controlled disposable identity was available. No account was created, and no live `403 not_invited` or Data API read denial was obtained in this round. Earlier rollback-only database evidence is preserved. | BLOCKED |
+| D03 — DB write and RPC security | Read-only query against the dedicated Supabase project confirmed ranking RLS, no INSERT/UPDATE/DELETE or column write privileges for `anon` or `authenticated`, no private schema usage or ranked-session SELECT for those roles, and no EXECUTE on either ranked RPC. The query returned 3 sessions and two active-member official records for Seoul day 2026-11-10, 57,280 and 72,864 ms, 10 commands each, `server-events-v1`. No database writes. | PASS |
+| D04 — Live public secret exposure | No new protected Preview access to inspect live HTML, JS, API bodies or console. Reviewed text-only diff contains no credential changes. Earlier public-config evidence remains tied to the prior deployment. | BLOCKED for new deployment |
+| E01/E02 — Desktop and themes | Required exact CSS viewports 1366 × 768, 1440 × 900 and 1597 × 900 in Light and Night were not exercised. The previous 1363 × 936 measurements are not substitutes. | BLOCKED |
+| E03 — Result geometry | No new DOM measurement. Prior Practice measurements of 150 × 52 px buttons and 16 px gap remain historical evidence. No official runs were replayed. | BLOCKED for new measurement |
+| E04 — Mobile | No 390 × 844 CSS viewport or mobile navigation/keyboard test was available. No resized screenshots were used. | BLOCKED |
+
+**Release recommendation.** The copy defect is corrected at source and the branch is ready for Preview acceptance testing once access is available. Final user acceptance and Production release review are not ready to sign off. Verify the deployed copy and environment scope, run all four Node commands, close isolated authentication and live security checks, and complete the exact responsive matrix. No additional application defect was established in this round.
