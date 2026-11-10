@@ -16,7 +16,7 @@
       <p id="recordStatus"></p>
     </div>
     <dl class="resultRecords">
-      <div><dt>MY DAILY RANK</dt><dd class="pixel">—</dd><dd class="muted">친구 랭킹 미연결</dd></div>
+      <div><dt>MY DAILY RANK</dt><dd class="pixel" id="resultRank">—</dd><dd class="muted" id="resultRankStatus">친구 랭킹 미연결</dd></div>
       <div><dt>PERSONAL BEST</dt><dd class="pixel" id="resultBest">—</dd><dd class="muted">이 기기의 오늘 기록</dd></div>
     </dl>
     <div class="resultStats" id="resultStats"></div>
@@ -25,8 +25,8 @@
         <button id="retry" class="primary">다시 도전 →</button>
         <button id="back">홈으로</button>
       </div>
-      <small class="muted">완주 기록은 로컬 검증용이며 서버 검증된 공식 랭킹이 아닙니다.</small>
+      <small class="muted" id="resultDisclaimer">완주 기록은 로컬 검증용이며 서버 검증된 공식 랭킹이 아닙니다.</small>
     </div>
   </div>
 </main>
-<footer><span>C. HYBRID / <span id="themeName">LIGHT</span></span><span>INTERACTIVE PLAYTEST · SAMPLE DATA</span></footer><dialog id="recordsDialog"><h2>이 기기의 검증 기록</h2><p id="recordText"></p><p class="muted">친구 랭킹·계정 기록은 다음 단계에 연결됩니다.</p><button id="closeRecords">닫기</button></dialog><dialog id="exitDialog"><h2>이번 플레이를 종료할까요?</h2><p>진행 중인 기록은 저장되지 않습니다. 확인 중에도 시간은 계속 흐릅니다.</p><button id="cancelExit">계속 플레이</button><button id="confirmExit">종료하기</button></dialog><script src="app.js"></script></body></html>
+<footer><span>C. HYBRID / <span id="themeName">LIGHT</span></span><span>INTERACTIVE PLAYTEST · SAMPLE DATA</span></footer><dialog id="recordsDialog"><h2>이 기기의 검증 기록</h2><p id="recordText"></p><p class="muted">친구 랭킹·계정 기록은 다음 단계에 연결됩니다.</p><button id="closeRecords">닫기</button></dialog><dialog id="exitDialog"><h2>이번 플레이를 종료할까요?</h2><p>진행 중인 기록은 저장되지 않습니다. 확인 중에도 시간은 계속 흐릅니다.</p><button id="cancelExit">계속 플레이</button><button id="confirmExit">종료하기</button></dialog><script src="ranked-client.js"></script><script src="app.js"></script></body></html>

@@ -186,6 +186,8 @@ if (typeof ResizeObserver === 'function') {
 }
 function init(){
  const e=new TypingEngine();let view='lobby',best=0,wasPractice=false,lastJudgment='READY',anchor=0,wall=0;
+  let officialRun=null, officialFailed=false, officialFinal=null, officialQueue=Promise.resolve();
+  let rankedStarting=false, runGeneration=0;
  const now=()=>anchor+Math.max(performance.now()-anchor,Date.now()-wall);
  function dateKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());return ['year','month','day'].map(type=>parts.find(p=>p.type===type).value).join('-')}
  let bestKey='';
@@ -208,7 +210,28 @@ function init(){
  function command(){if(e.index>=bank.length)return;const [level]=bank[e.index];$('commandLabel').textContent=`COMMAND ${String(e.index+1).padStart(2,'0')}/10 · ${level}`;$('typing').value='';drawTarget()}
  function judgment(text){const status=$('feedback');if(status.textContent!==text)status.textContent=text}
  function render(){const secs=e.seconds(now()),progress=e.index/bank.length*100;$('time').textContent=formatTime(secs);$('timeBar').style.width=`${progress}%`;$('timeBar').setAttribute('aria-valuenow',String(e.index));$('commandProgress').textContent=`${String(e.index).padStart(2,'0')} / 10`;$('score').textContent=Math.round(e.metrics().score);$('accuracy').textContent=(e.metrics().accuracy*100).toFixed(1)+'%';$('combo').textContent='×'+e.combo;$('youChars').textContent=`${e.index}/10`;$('youMarker').style.left=progress+'%';$('typing').disabled=e.status!=='running';$('practiceNotice').hidden=!e.practice;$('modeLabel').textContent=e.practice?'PRACTICE SPEEDRUN · MIXED':'DAILY SPEEDRUN · MIXED'}
- function start(practice=false){loadBest();wasPractice=practice;anchor=performance.now();wall=Date.now();e.reset();e.practice=practice;e.status='countdown';e.started=anchor+3000;lastJudgment='READY';show('arena');command();judgment('READY');$('inputState').textContent='직접 입력 · Enter로 제출';$('countdown').hidden=false;$('countdownValue').textContent='3';render()}
+ function start(practice=false){loadBest();wasPractice=practice;runGeneration++;officialRun=null;officialFailed=false;officialFinal=null;officialQueue=Promise.resolve();rankedStarting=false;
+    anchor=performance.now();wall=Date.now();e.reset();e.practice=practice;e.status='countdown';e.started=anchor+3000;lastJudgment='READY';show('arena');command();judgment('READY');$('inputState').textContent='직접 입력 · Enter로 제출';$('countdown').hidden=false;$('countdownValue').textContent='3';render()}
+  function enterRunning(){
+    e.status='running';e.started=now();$('countdown').hidden=true;render();focus();
+  }
+  function beginOfficialOrLocal(){
+    if(rankedStarting)return;
+    rankedStarting=true;
+    const generation=runGeneration;
+    if(e.practice || !window.CLI_RANKED){enterRunning();return}
+    $('countdownValue').textContent='VERIFYING';
+    window.CLI_RANKED.start().then(id=>{
+      if(generation!==runGeneration||e.status!=='countdown')return;
+      officialRun=id;
+      enterRunning();
+      $('inputState').textContent=id?'서버 공식 기록 검증 진행 중':'로컬 플레이 · 공식 기록 미연결';
+    }).catch(()=>{
+      if(generation!==runGeneration||e.status!=='countdown')return;
+      officialFailed=true;enterRunning();
+      $('inputState').textContent='서버 연결 실패 · 로컬 기록으로만 진행';
+    });
+  }
  function finish(stopped=false,finishedAt=now()){e.finish(finishedAt);$('countdown').hidden=true;$('exitDialog').close();const m=e.metrics(),complete=!stopped&&e.index===bank.length,eligible=complete&&!e.practice;let newBest=false;if(eligible&&(!best||e.elapsed<best)){best=e.elapsed;newBest=true;try{localStorage.setItem(bestKey,String(best))}catch{}$('best').textContent=formatTime(best)}
   $('resultTitle').textContent=stopped?'SESSION ENDED':complete?(e.practice?'PRACTICE COMPLETE':'SPEEDRUN COMPLETE'):'RUN INCOMPLETE';
   $('resultDetail').textContent=complete?'10개 명령어 완료':`${e.index}/10개 완료 · 미완주 기록은 저장하지 않습니다.`;
@@ -220,12 +243,56 @@ function init(){
   recordStatus.dataset.newBest=String(newBest);
   recordStatus.textContent=stopped?'중도 종료 · 기록에 반영하지 않았습니다.':!complete?'미완주 · 기록에 반영하지 않았습니다.':e.practice?'연습 기록 · 오늘의 최고 기록에 반영하지 않았습니다.':newBest?'NEW PERSONAL BEST':'완주 · 오늘의 최고 기록 유지';
   show('result');
+  $('resultMode').textContent='PLAYTEST RESULT';
+  $('resultRank').textContent='—';
+  $('resultRankStatus').textContent='친구 랭킹 미연결';
+  $('resultDisclaimer').textContent='완주 기록은 로컬 검증용이며 서버 검증된 공식 랭킹이 아닙니다.';
+  const completedRun=officialRun,generation=runGeneration;
+  if(eligible&&completedRun){
+    $('resultRankStatus').textContent='서버 확인 중…';
+    officialQueue.then(async()=>{
+      if(officialFailed || !officialFinal || !officialFinal.complete)throw new Error('not_verified');
+      if(generation!==runGeneration || view!=='result')return;
+      const verified=officialFinal;
+      $('resultMode').textContent='SERVER VERIFIED RESULT';
+      $('finalScore').textContent=formatTime(verified.elapsed_ms/1000);
+      $('resultDisclaimer').textContent='공식 서버 기록 · 서버 수신 시각으로 측정하며 네트워크 지연이 포함될 수 있습니다.';
+      $('resultRankStatus').textContent='초대 회원 공식 기록';
+      try {
+        const rank=await window.CLI_RANKED.rankFor(verified.seoul_day);
+        if(generation!==runGeneration || view!=='result')return;
+        if(rank){$('resultRank').textContent='#'+rank.rank;$('resultRankStatus').textContent='오늘의 친구 랭킹';}
+        else {$('resultRankStatus').textContent='공식 기록 저장됨 · 순위 확인 필요';}
+      } catch {
+        $('resultRankStatus').textContent='공식 기록 저장됨 · 순위 조회 실패';
+      }
+    }).catch(()=>{
+      if(generation!==runGeneration || view!=='result')return;
+      $('resultRankStatus').textContent='서버 검증 실패 · 로컬 기록만 유지';
+    });
+  } else if(eligible && officialFailed){
+    $('resultRankStatus').textContent='서버 검증 불가 · 로컬 기록만 유지';
+  }
  }
  function requestExit(){if(view==='arena')$('exitDialog').showModal();else show('lobby')}
  $('start').onclick=()=>start();$('practice').onclick=()=>start(true);$('retry').onclick=()=>start(wasPractice);$('back').onclick=()=>show('lobby');$('home').onclick=requestExit;$('exit').onclick=requestExit;$('cancelExit').onclick=()=>{$('exitDialog').close();focus()};$('confirmExit').onclick=()=>finish(true);$('exitDialog').addEventListener('close',focus);
  $('typing').addEventListener('input',ev=>{if(e.status!=='running')return;e.input(ev.target.value,target());drawTarget();judgment(wrong()?'ERROR':lastJudgment);$('inputState').textContent=wrong()?'표시된 오류를 수정해주세요':'Enter로 제출';render()});
  $('typing').addEventListener('paste',ev=>{ev.preventDefault();$('inputState').textContent='붙여넣기 대신 직접 입력해주세요.'});$('typing').addEventListener('drop',ev=>ev.preventDefault());
- $('typing').addEventListener('keydown',ev=>{if(ev.key!=='Enter'||ev.isComposing)return;ev.preventDefault();if(e.status!=='running')return;const submittedAt=now();const result=e.submit(target());if(!result){$('inputState').textContent='문구를 끝까지 정확하게 입력해주세요.';return}lastJudgment=result.toUpperCase();judgment(lastJudgment);if(e.index===bank.length){finish(false,submittedAt);return}command();$('inputState').textContent='다음 문구를 입력하세요';render()});
+ $('typing').addEventListener('keydown',ev=>{if(ev.key!=='Enter'||ev.isComposing)return;ev.preventDefault();if(e.status!=='running')return;
+    const submittedAt=now(),submittedCommand=target(),result=e.submit(submittedCommand);
+    if(!result){$('inputState').textContent='문구를 끝까지 정확하게 입력해주세요.';return}
+    if(officialRun&&!e.practice&&!officialFailed){
+      const runId=officialRun,step=e.index;
+      officialQueue=officialQueue.then(async()=>{
+        if(officialFailed)return;
+        const receipt=await window.CLI_RANKED.step(runId,step,submittedCommand);
+        if(step===bank.length)officialFinal=receipt;
+      }).catch(()=>{officialFailed=true;});
+    }
+    lastJudgment=result.toUpperCase();judgment(lastJudgment);
+    if(e.index===bank.length){finish(false,submittedAt);return}
+    command();$('inputState').textContent='다음 문구를 입력하세요';render();
+  });
  $('records').onclick=()=>window.location.assign('leaderboard.html');$('archive').onclick=()=>{$('recordText').textContent='Command Collection과 BOSS COMMAND는 현재 버전에 연결되어 있지 않습니다.';$('recordsDialog').showModal()};$('closeRecords').onclick=()=>$('recordsDialog').close();
- setInterval(()=>{if(view!=='arena')return;if(e.status==='countdown'){const left=e.started-now();$('countdownValue').textContent=Math.max(1,Math.ceil(left/1000));if(left<=0){e.status='running';$('countdown').hidden=true;render();focus()}}if(e.status==='running')render()},50);show('lobby');
+ setInterval(()=>{if(view!=='arena')return;if(e.status==='countdown'){const left=e.started-now();$('countdownValue').textContent=Math.max(1,Math.ceil(left/1000));if(left<=0)beginOfficialOrLocal()}if(e.status==='running')render()},50);show('lobby');
 }
