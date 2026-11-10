@@ -301,3 +301,23 @@ The static and mocked assertions cover the intended source and do not replace li
 ### E. Final assessment
 
 Core gameplay and official ranking remain suitable for functional user acceptance. **Security QA and exact responsive QA are incomplete, so Production release is not recommended yet.** The open items are evidence gaps rather than demonstrated auth bypass or visual regressions. No application code, DB policies, users or official records were modified. GitHub main and Production were outside the change scope.
+
+
+### Manual Mac Chrome visual follow-up — Lobby at four viewports, both themes (2026-11-10)
+
+**Scope:** The user supplied **eight Chrome DevTools Device Toolbar screenshots** from the tested Phase 3 Preview, pairing **Light** and **Night** at all four requested responsive size presets. The actual Device Toolbar shows the dimensions in each screenshot. These screenshots support a **lobby visual smoke PASS** for the visible composition at each size; they do **not** establish full five-screen responsive acceptance, physical mobile usability, measured DOM geometry, or absent overflow outside the captured viewport.
+
+| Device Toolbar size (CSS px) | Light lobby screenshot | Night lobby screenshot | Visual verdict |
+| --- | --- | --- | --- |
+| `1366 × 768` | Supplied; two-column topology and challenge panel visible, header and footer aligned | Supplied; same layout with Night palette and legible labels | **PASS — lobby visual** |
+| `1440 × 900` | Supplied; topology devices/labels and challenge panel fit the composition | Supplied; topology and text remain visible without obvious overlap | **PASS — lobby visual** |
+| `1597 × 900` | Supplied; centered max-width layout, connections and footer visible | Supplied; same proportions and readable Night presentation | **PASS — lobby visual** |
+| `390 × 844` | Supplied; header and theme toggle remain visible, topology and labels fit the displayed mobile panel, challenge continues below fold | Supplied; equivalent stacked layout with Night palette, vertical scrolling required | **PASS — visible lobby portion only** |
+
+**Observed features:** Across captured states the Router, Switch, Linux Server, INTERNET globe and Client Laptop illustrations, their connector paths, the locked Secret Core Node and retro typography retain legible proportions and placement. The wide-screen whitespace is consistent with a centered maximum-width layout. On mobile, the game challenge follows the topology in a single-column vertical flow; below-fold content is **not** itself a defect. The Vercel floating-feedback control appears in screenshots and must not be mistaken for a game element.
+
+**Evidence provenance and limitations:** Screenshots were provided by the user in the conversation at approximately 23:50–23:53 KST; they were not taken by Work and are **not uploaded to public GitHub**. The screenshots demonstrate the DevTools **configured** dimensions and visible appearance, but do not independently supply JavaScript `innerWidth/innerHeight` or `document.documentElement.scrollWidth` readings. No precise DOM overflow proof, animation behavior, functional keyboard/touch navigation, or result-screen button geometry is established. The appearance of the home page does not prove the gameplay/result/auth/leaderboard views pass at these sizes.
+
+**Remaining responsive test cases:** Repeat visual/functional checks at each exact viewport in the gameplay screen, Practice result, authentication, and protected Friends Leaderboard; inspect mobile navigation/input and keyboard access; measure the result buttons at **150 × 52 CSS px** with **16 px** gap on the approved desktop geometry; and obtain a read-only `innerWidth/innerHeight/scrollWidth` check where feasible. The broader STEP 2 verdict therefore remains **PARTIAL**, even though the **eight lobby-theme screenshots pass their own visual checks**.
+
+**Release scope:** Documentation-only supplement. No UI/game/Auth changes, no Supabase writes, no Production deployment, no `main` merge.
