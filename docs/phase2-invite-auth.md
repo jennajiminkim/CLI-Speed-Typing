@@ -1,58 +1,78 @@
-# Phase 2 — Invite-only friends access
+# Phase 2 — Invite-first friends access
 
-This development branch provides email-verified invitation membership and a server-protected, READ-ONLY leaderboard scaffold. It does NOT submit gameplay records or claim official ranking.
+## Status and isolation
 
-## Deployment and isolation
-- Branch: feature/invite-auth-phase2. Do not merge or deploy to Production before review.
-- Use a NEW dedicated Supabase project for CLI Speed Typing Friends. Do not reuse PlanDoSee or the earlier security practice database.
-- Create the project only after choosing the Supabase organization and confirming any price.
-- Apply supabase/migrations/20261110_invite_auth.sql to the dedicated project only.
-- Configure Vercel PREVIEW environment variables:
-  CLI_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
-  CLI_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
-- Configure Supabase Auth email/password with email confirmations ENABLED.
-- Allow the Preview URL ending in /auth.html as an Auth redirect URL.
-- /api/public-config returns only the public URL/publishable key. NEVER include a service_role or sb_secret_ key.
-- Browser imports @supabase/supabase-js version 2.119.0 from a version-pinned CDN; Preview needs internet connectivity for this library.
+This is a **development branch**, not production. Project: CLI Speed Typing Friends (Supabase ref `zhfkjwduelavepjfacpo`). Existing Production and GitHub `main` remain unchanged.
 
-## User flow
-1. Clicking Leaderboard from the lobby opens the protected leaderboard.html page.
-2. Guests see ACCESS DENIED and a link to auth.html.
-3. Sign up by providing email/password, a 32-hex-character invite code format, and a 2–16 character nickname. Receive a verification email. The code is NOT consumed at signup, and merely signing up grants no membership.
-4. After email confirmation, sign in. Enter the invite code and nickname once more. The authenticated claim_invite database function consumes the one-use code atomically and creates active membership.
-5. Only active invite members can SELECT server-ranked runs. Records remain empty until Phase 3.
-6. Existing local Speedrun play, guest practice, local best, UI assets, and Light/Night display are unaffected. No public client can post an official run.
+Current workflow: **Invite code → email/password/nickname signup → session → atomic invitation redemption → member-only leaderboard**. Email-link confirmation is intentionally optional in the product, but must be disabled in the Supabase Auth dashboard before this flow can be tested. Email address ownership will NOT be verified in that configuration. This reduces friction but brings impersonation, password-reset, and account-recovery risks. Use only within a small trusted group.
 
-## Administrator invitation creation
-Generate unique random 128-bit codes OFFLINE with macOS command:
-  openssl rand -hex 16
+No verified gameplay record submission exists yet. The leaderboard remains read-only and empty until Phase 3.
 
-Do NOT commit codes/passwords/emails to the public repository, and do NOT paste live codes or secrets into chat.
-In the dedicated Supabase SQL editor, privately replace the placeholder below with a random code before executing:
-  insert into private.invite_codes(code_sha256,max_uses,expires_at)
-  values (encode(sha256(convert_to(upper('REPLACE_WITH_32_HEX_CHARS'),'UTF8')),'hex'),1,now()+interval '14 days');
-This stores only the digest. Each code is single use and expires. The administrator can revoke a code by setting revoked_at.
+## Preview configuration
 
-## Security boundaries
-- public.invite_members: RLS SELECT only for the caller's own row, no browser writes.
-- private.invite_codes, private.invite_claim_attempts: unavailable to anon/authenticated roles.
-- public.claim_invite: authenticated-only SECURITY DEFINER RPC with auth.uid, verified-email check, high-entropy random invite code, hourly attempt limit 10, atomic claim; private rows are never returned.
-- public.ranked_runs: SELECT only for active invite members; no INSERT/UPDATE/DELETE permission or policy for any browser client (including invited accounts).
-- The actual security boundary is database RLS, NOT UI hiding.
-- Nicknames are public ranking labels; emails are never shown on ranking pages.
-- Uninvited accounts may technically exist in Supabase Auth, but have no membership, ranking read, or official record write authorization.
+Existing Vercel Preview link (commit d9accac, historical preview):
+https://cli-speed-typing-o0yfrws7h-jennakim.vercel.app/
 
-## Required live QA after configuring the new project
-1. Guest: direct leaderboard opens ACCESS DENIED. Direct REST SELECT yields no rows and POST denied.
-2. Logged-in uninvited account: not a member, no ranking data, no record write.
-3. Verified invited account: claim once, own member row readable, leaderboard SELECT allowed, browser INSERT denied.
-4. Second account reusing used code: claim false; no membership.
-5. Revoked/expired invite: false. Unverified email: cannot claim.
-6. Two simultaneous claims for the same one-use code: maximum one successful member.
-7. Above 10 attempts per hour: denied; inactive member denied ranking access.
-8. Two independent invited accounts access the page; results remain empty until Phase 3.
-9. Run node test.cjs, node qa-speedrun.cjs, node test-auth.cjs and inspect Light/Night, mobile, error and confirmation flows.
-10. Check Supabase security advisors. Test with disposable accounts and codes.
+Vercel project:
+https://vercel.com/jennakim/cli-speed-typing
 
-## Phase 3
-Implement a trusted server endpoint to verify run ownership, 10 exact commands, timings, completion, repeated/replayed events and daily best updates BEFORE privileged writing to ranked_runs. Do not allow direct browser writes to claimed times. Add signup/email rate-limiting, anti-abuse checks, and dependency CSP review before public rollout.
+Preview environment variables, already displayed as configured in the user's Vercel settings screenshot:
+- `CLI_SUPABASE_URL=https://zhfkjwduelavepjfacpo.supabase.co`
+- `CLI_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...`
+
+Exact values and runtime behavior **have not been independently verified**. Never use service_role or secret keys in browsers.
+
+Because the source code is updated after the listed preview commit, **redeploy the latest development branch** and get the new Preview URL before final testing. Environment variables added after a deployment require a fresh deployment to apply.
+
+### Supabase Auth manual setting still required
+
+Visit https://supabase.com/dashboard/project/zhfkjwduelavepjfacpo/auth/providers
+
+Under Email provider, enable email/password signup and disable **Confirm Email** to allow immediate signed-in sessions on email/password signup. Supabase Auth configuration is not editable with the connected Supabase project tools; change this in the dashboard. Check whether the project is restricted to invited members before sharing the URL. Emails are unverified, so invite codes remain the authorization boundary. Do not disable confirmation until accepting the associated risk.
+
+Email redirects are not essential for immediate signup with Confirm Email disabled. If email confirmations are later re-enabled, explicitly set Site URL and allowed Redirect URLs at:
+https://supabase.com/dashboard/project/zhfkjwduelavepjfacpo/auth/url-configuration
+
+## Security model
+
+1. `public.check_invite`: a public RPC checks a high-entropy 128-bit invite against the private digest, expiration and usage limits. **It does not consume or reserve the code** and **does not grant access**.
+2. `auth.signUp`: creates a password-based Auth account. When Confirm Email is disabled, it returns a session that can be used to redeem the code.
+3. `public.claim_invite`: authenticated-only RPC verifies the session, consumes exactly one available use and creates the member record. This retains the original member permission gate.
+4. `public.ranked_runs`: membership-gated RLS SELECT; browser clients have **no direct write permission**.
+5. A user can still create an Auth account by calling Supabase Auth directly without entering a code. Such an account is **not authorized for shared leaderboard read/write**. Preventing account creation itself (rather than just access) needs an additional server-side Auth hook or trusted registration service.
+6. Public precheck is not rate-limited on its own; high-entropy codes reduce guessing risk, but gateway abuse and email/password signup rate-limits must be addressed before a public launch.
+7. No invite is stored in `localStorage`, query string or public repository.
+
+## Invite issuance (administrator only)
+
+Generate code **privately** with `openssl rand -hex 16`, and store its digest in the dedicated Supabase project:
+
+```sql
+insert into private.invite_codes(code_sha256,max_uses,expires_at)
+values (encode(sha256(convert_to(upper('REPLACE_WITH_32_HEX_CHARS'),'UTF8')),'hex'),1,now()+interval '14 days');
+```
+
+Do not commit actual invitation codes or email addresses. Distribute unique one-use codes privately. Revoke by setting `revoked_at`.
+
+## Live acceptance tests (not yet executed)
+
+- Unauthenticated visitor cannot retrieve any ranked records or insert them.
+- Valid invite precheck allows the signup form; wrong, expired, revoked and used codes are rejected.
+- Email/password signup immediately returns a session only after Confirm Email is disabled.
+- The authenticated claim atomically consumes the invite and creates member access.
+- Reusing a consumed code with another account fails.
+- Signing up without using a code through Supabase Auth does **not** grant a member record or ranked-data access.
+- A member can read the leaderboard while still being **unable to directly insert** ranked runs.
+- Failures after creating a user leave them without shared-record permissions; they may sign in and redeem a valid code.
+- Light/Night layouts and existing gameplay remain intact.
+- Run `node test.cjs`, `node qa-speedrun.cjs`, `node test-auth.cjs`, and inspect Supabase security advisor warnings.
+
+## Pending
+
+- Confirm Email dashboard toggle.
+- Test-invite generation and user A/B live signups.
+- New Vercel Preview from the latest development commit.
+- Actual browser tests of the precheck, signup, atomic consume and RLS rules.
+- Hardening against email impersonation, account recovery abuse and registration flooding.
+
+Do not merge into `main` or expose to general users until live tests and security review are done.

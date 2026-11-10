@@ -3,142 +3,184 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.119.0?bundl
 const byId = id => document.getElementById(id);
 const next = new URLSearchParams(location.search).get('next') === 'leaderboard' ? 'leaderboard' : 'lobby';
 const tabs = byId('authTabs');
-const forms = { login: byId('loginForm'), signup: byId('signupForm') };
+const forms = {login:byId('loginForm'),invite:byId('inviteForm'),signup:byId('signupForm')};
 let client = null;
-if (localStorage.getItem('cli-theme') === 'night') document.body.classList.add('night');
+let verifiedInvite = null; // Memory only: never persist an invitation in browser storage or in URL.
+try {
+  if (localStorage.getItem('cli-theme') === 'night') document.body.classList.add('night');
+} catch {}
 
-function message(text, error = false) {
-  const box = byId('authMessage');
-  box.textContent = text;
-  box.dataset.error = String(error);
+function message(text,error=false) {
+  const box=byId('authMessage');
+  box.textContent=text;
+  box.dataset.error=String(error);
+}
+function resetInvite() {
+  verifiedInvite=null;
+  byId('inviteCode').value='';
 }
 function panel(which) {
-  tabs.hidden = !['login','signup'].includes(which);
-  for (const [name,form] of Object.entries(forms)) form.hidden = name !== which;
-  byId('claimSection').hidden = which !== 'claim';
-  byId('memberSection').hidden = which !== 'member';
-  byId('tabLogin').setAttribute('aria-pressed',String(which === 'login'));
-  byId('tabSignup').setAttribute('aria-pressed',String(which === 'signup'));
+  tabs.hidden = !['login','invite','signup'].includes(which);
+  for(const [name,form] of Object.entries(forms)) form.hidden = name!==which;
+  byId('claimSection').hidden = which!=='claim';
+  byId('memberSection').hidden = which!=='member';
+  byId('tabLogin').setAttribute('aria-pressed',String(which==='login'));
+  byId('tabSignup').setAttribute('aria-pressed',String(which==='invite'||which==='signup'));
   message('');
 }
-function busy(form, value) {
-  const button = form.querySelector('button[type=submit]');
-  button.disabled = value;
+function busy(form,value) {
+  const button=form.querySelector('button[type=submit]');
+  if(button) button.disabled=value;
 }
-function publicError(error, fallback) {
-  // Do not show raw authentication responses or leak whether an email exists.
-  if (!error) return fallback;
-  if (error.message?.includes('Email not confirmed')) return '이메일 인증을 완료한 후 로그인해주세요.';
-  return fallback;
-}
-async function activeMember(user) {
-  const {data,error} = await client.from('invite_members')
+function validCode(s){return /^[A-Fa-f0-9]{32}$/.test(s);}
+function validName(s){return /^[A-Za-z0-9가-힣_-]{2,16}$/.test(s);}
+async function memberOf(user) {
+  const {data,error}=await client.from('invite_members')
     .select('display_name,is_active').eq('user_id',user.id).maybeSingle();
-  if (error) throw new Error('멤버 권한을 확인하지 못했습니다. 설정과 네트워크 연결을 확인해주세요.');
+  if(error) throw new Error('member_lookup_failed');
   return data?.is_active ? data : null;
 }
-async function refreshMember() {
-  const {data,error} = await client.auth.getUser();
-  if (error || !data?.user) { panel('login'); return; }
-  const member = await activeMember(data.user);
-  if (!member) {
+async function refreshMember(){
+  const {data,error}=await client.auth.getUser();
+  if(error || !data?.user) {resetInvite();panel('login');return;}
+  const member=await memberOf(data.user);
+  if(!member) {
+    resetInvite();
     panel('claim');
-    message('이메일 인증을 완료했다면 초대 코드를 등록해주세요.');
+    message('친구 랭킹을 이용하려면 유효한 초대 코드를 등록해주세요.');
     return;
   }
+  resetInvite();
   panel('member');
-  byId('memberName').textContent = member.display_name;
-  if (next === 'leaderboard') location.replace('leaderboard.html');
+  byId('memberName').textContent=member.display_name;
+  if(next==='leaderboard') location.replace('leaderboard.html');
 }
-async function logout() {
-  if (!client) return;
-  const {error} = await client.auth.signOut();
-  if (error) { message('로그아웃에 실패했습니다. 다시 시도해주세요.',true); return; }
-  panel('login');
+async function logout(){
+  if(!client) return;
+  const {error}=await client.auth.signOut();
+  if(error) return message('로그아웃에 실패했습니다. 다시 시도해주세요.',true);
+  resetInvite();panel('login');
 }
-function checkedInvite(input) {
-  return /^[a-f0-9]{32}$/i.test(input.trim());
+async function checkCode(code){
+  const {data,error}=await client.rpc('check_invite',{p_code:code});
+  if(error) throw error;
+  return data===true;
 }
-function checkedName(input) {
-  return /^[A-Za-z0-9가-힣_-]{2,16}$/.test(input.trim());
+async function claimCode(code,nickname){
+  const {data,error}=await client.rpc('claim_invite',{
+    p_code:code,p_display_name:nickname
+  });
+  return !error && data===true;
 }
-byId('tabLogin').onclick = () => panel('login');
-byId('tabSignup').onclick = () => panel('signup');
-byId('claimSignout').onclick = logout;
-byId('memberSignout').onclick = logout;
+byId('tabLogin').onclick=()=>{resetInvite();panel('login');};
+byId('tabSignup').onclick=()=>{resetInvite();panel('invite');};
+byId('changeInvite').onclick=()=>{resetInvite();panel('invite');};
+byId('claimSignout').onclick=logout;
+byId('memberSignout').onclick=logout;
 
-forms.login.addEventListener('submit',async event => {
-  event.preventDefault();
-  if (!client) return message('인증 서비스가 준비되지 않았습니다.',true);
+forms.login.addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!client) return message('인증 서비스가 준비되지 않았습니다.',true);
   busy(forms.login,true);
-  const email=byId('loginEmail').value.trim();
-  const password=byId('loginPassword').value;
   try {
-    const {error} = await client.auth.signInWithPassword({email,password});
-    if (error) return message(publicError(error,'로그인할 수 없습니다. 계정 정보와 이메일 인증 상태를 확인해주세요.'),true);
+    const {error}=await client.auth.signInWithPassword({
+      email:byId('loginEmail').value.trim(),
+      password:byId('loginPassword').value
+    });
+    if(error) return message('로그인에 실패했습니다. 계정·비밀번호와 서버 인증 설정을 확인해주세요.',true);
     byId('loginPassword').value='';
     await refreshMember();
-  } catch { message('로그인 중 문제가 발생했습니다. 다시 시도해주세요.',true); }
-  finally { busy(forms.login,false); }
-});
-forms.signup.addEventListener('submit',async event => {
-  event.preventDefault();
-  if (!client) return message('인증 서비스가 준비되지 않았습니다.',true);
-  const email=byId('signupEmail').value.trim();
-  const password=byId('signupPassword').value;
-  const code=byId('signupInvite').value.trim();
-  const nickname=byId('signupNickname').value.trim();
-  if (!checkedInvite(code) || !checkedName(nickname) || password.length<8) {
-    return message('초대 코드는 32자리 영숫자(16진수), 닉네임은 2–16자여야 합니다.',true);
-  }
-  busy(forms.signup,true);
-  try {
-    const {error} = await client.auth.signUp({
-      email,password,options:{emailRedirectTo:location.origin+'/auth.html'}
-    });
-    if (error) return message('계정 생성 요청에 실패했습니다. 이메일 형식과 비밀번호를 확인해주세요.',true);
-    // Do not persist invite codes or passwords in localStorage or in a URL.
-    byId('signupPassword').value='';
-    byId('signupInvite').value='';
-    message('이메일로 발송된 인증 링크를 확인해주세요. 인증 완료 후 로그인하여 초대 코드를 다시 등록합니다.');
-  } catch { message('가입 요청 중 문제가 발생했습니다. 다시 시도해주세요.',true); }
-  finally { busy(forms.signup,false); }
-});
-byId('claimForm').addEventListener('submit',async event => {
-  event.preventDefault();
-  if (!client) return message('인증 서비스가 준비되지 않았습니다.',true);
-  const form=byId('claimForm');
-  const code=byId('claimInvite').value.trim();
-  const nickname=byId('claimNickname').value.trim();
-  if (!checkedInvite(code) || !checkedName(nickname))
-    return message('초대 코드는 32자리 16진수, 닉네임은 한글·영문·숫자·_- 2–16자로 입력해주세요.',true);
-  busy(form,true);
-  try {
-    const {data,error} = await client.rpc('claim_invite',{
-      p_code:code,p_display_name:nickname
-    });
-    if (error || data !== true)
-      return message('초대 코드를 등록하지 못했습니다. 코드의 유효 기간·사용 여부·이메일 인증을 확인해주세요.',true);
-    byId('claimInvite').value='';
-    await refreshMember();
-  } catch { message('초대 확인 중 문제가 발생했습니다. 다시 시도해주세요.',true); }
-  finally { busy(form,false); }
+  }catch{message('로그인 요청이 실패했습니다. 다시 시도해주세요.',true);}
+  finally{busy(forms.login,false);}
 });
 
-(async function init() {
-  panel('login');
+forms.invite.addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!client) return message('인증 서비스가 준비되지 않았습니다.',true);
+  const code=byId('inviteCode').value.trim().toUpperCase();
+  if(!validCode(code)) return message('초대 코드는 32자리 16진수 문자로 입력해주세요.',true);
+  busy(forms.invite,true);
   try {
+    if(!(await checkCode(code))) {
+      resetInvite();
+      return message('사용할 수 없는 초대 코드입니다. 만료 또는 사용 여부를 확인해주세요.',true);
+    }
+    verifiedInvite=code;
+    byId('inviteCode').value='';
+    panel('signup');
+    message('초대 코드가 확인되었습니다. 계정 정보를 입력해주세요.');
+  }catch{resetInvite();message('초대 검증에 실패했습니다. 관리자에게 서버 설정을 확인해주세요.',true);}
+  finally{busy(forms.invite,false);}
+});
+
+forms.signup.addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!client) return message('인증 서비스가 준비되지 않았습니다.',true);
+  if(!verifiedInvite){panel('invite');return message('초대 코드를 먼저 확인해주세요.',true);}
+  const code=verifiedInvite;
+  const email=byId('signupEmail').value.trim();
+  const password=byId('signupPassword').value;
+  const nickname=byId('signupNickname').value.trim();
+  if(!validName(nickname)||password.length<8)
+    return message('닉네임은 2–16자, 비밀번호는 8자 이상이어야 합니다.',true);
+  busy(forms.signup,true);
+  try {
+    // A precheck never reserves a code. Check again right before account creation.
+    if(!(await checkCode(code))) {
+      resetInvite();panel('invite');
+      return message('초대 코드가 만료되었거나 이미 사용되었습니다. 새 코드를 확인해주세요.',true);
+    }
+    const {data,error}=await client.auth.signUp({email,password});
+    byId('signupPassword').value='';
+    if(error) return message('회원가입에 실패했습니다. 이메일과 비밀번호를 확인해주세요.',true);
+    if(!data?.session) {
+      resetInvite();panel('login');
+      return message('서버에서 이메일 인증이 요구되고 있습니다. 관리자에게 Supabase Confirm Email 설정을 확인해주세요. 가입은 대기 상태일 수 있습니다.',true);
+    }
+    // Only this authenticated RPC can create membership and consume the code.
+    const claimed=await claimCode(code,nickname);
+    resetInvite();
+    if(!claimed){
+      panel('claim');
+      return message('계정은 생성되었지만 초대 등록을 완료하지 못했습니다. 유효한 코드를 다시 등록해주세요. 랭킹 접근은 차단된 상태입니다.',true);
+    }
+    await refreshMember();
+  }catch{
+    resetInvite();panel('claim');
+    message('가입 처리 중 문제가 발생했습니다. 초대 등록 상태를 확인하고 재시도해주세요.',true);
+  }finally{busy(forms.signup,false);}
+});
+
+byId('claimForm').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!client) return message('인증 서비스가 준비되지 않았습니다.',true);
+  const code=byId('claimInvite').value.trim().toUpperCase();
+  const nickname=byId('claimNickname').value.trim();
+  if(!validCode(code)||!validName(nickname))
+    return message('초대 코드는 32자리 16진수, 닉네임은 2–16자로 입력해주세요.',true);
+  const form=byId('claimForm');
+  busy(form,true);
+  try{
+    if(!(await claimCode(code,nickname))) return message('초대 등록에 실패했습니다. 코드를 확인해주세요.',true);
+    byId('claimInvite').value='';
+    await refreshMember();
+  }catch{message('초대 등록 요청에 실패했습니다.',true);}
+  finally{busy(form,false);}
+});
+
+(async function init(){
+  panel('login');
+  try{
     const response=await fetch('/api/public-config',{cache:'no-store'});
-    if (!response.ok) throw new Error('missing_config');
+    if(!response.ok) throw new Error('missing_config');
     const config=await response.json();
-    if (!config.url || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(config.url)
-        || !config.key?.startsWith('sb_publishable_'))
-      throw new Error('invalid_config');
+    if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(config.url||'') ||
+       !/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.key||'')) throw new Error('invalid_config');
     client=createClient(config.url,config.key,{
       auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}
     });
     await refreshMember();
-  } catch {
-    message('친구 로그인 개발 환경이 아직 연결되지 않았습니다. 관리자에게 Supabase Preview 설정을 요청해주세요.',true);
+  }catch{
+    message('친구 로그인 연결이 아직 준비되지 않았습니다. Preview 환경 변수와 데이터베이스 설정을 확인해주세요.',true);
   }
 })();
