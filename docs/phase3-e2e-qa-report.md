@@ -45,7 +45,7 @@ The core ranking flow meets the acceptance criteria. Remaining coverage is a fre
 
 ## Multi-User Leaderboard E2E Verification
 
-**Verdict: PARTIAL.** The same-day server persistence check passed for two distinct invited accounts. The authenticated two-row browser rendering and refresh checks remain blocked in the QA browser.
+**Verdict at automated QA cutoff: PARTIAL.** The same-day server persistence check passed for two distinct invited accounts; the QA automation browser did not obtain an authorized invitation-member session. **Follow-up user acceptance (2026-11-10): PASS for both-member UI rendering and two-capture stability**, described below. The complete security and viewport regression matrix remains PARTIAL.
 
 The target was the [same Vercel Preview](https://cli-speed-typing-25i1yvwbq-jennakim.vercel.app/leaderboard.html) from implementation commit `391e63e631a7b69be13d0ed853451840deebbb37`. Both the database and the Preview page showed the Seoul-local date `2026-11-10`. At baseline, two distinct Supabase Auth accounts had active invitation memberships. There was one official ranking row, A's `57280` ms daily best. B had no official row.
 
@@ -63,4 +63,31 @@ Both rows had `command_count=10`, `verification_version=server-events-v1`, and d
 - **PASS — Live write protection.** RLS remains enabled on `public.ranked_runs`. Both `anon` and `authenticated` lacked INSERT, UPDATE and DELETE table grants, including INSERT and UPDATE column grants. The earlier live role-denial, foreign-owner submission, incomplete-run, Practice, slower-retry and public-config checks remain documented above. No new cross-account HTTP tampering or credential exposure scan was performed.
 - **Release scope.** No accounts, memberships, invitations, results, security settings or application code were changed by QA. No main-branch update, merge or Production deployment was performed. This update adds documentation only.
 
-**User acceptance status:** The server-side multi-user check is ready for UI acceptance testing. Overall multi-user E2E remains PARTIAL until an invited session shows both rows in the expected order and a refresh preserves them.
+**User acceptance status at prior report cutoff:** The server-side comparison was ready, while the QA automation browser was blocked from seeing both rows. Subsequent user-supplied authenticated screenshots address the UI display and ordering requirement; see follow-up evidence below.
+
+
+### Follow-up user acceptance — authenticated two-row leaderboard (2026-11-10)
+
+**Scope and evidence source:** The user supplied two screenshots from Chrome at approximately **22:20:42** and **22:21:12 KST** in response to a request for screenshots before and after a refresh. Both show the same authorized Phase 3 Preview's `/leaderboard.html` with **`2026-11-10 · ASIA/SEOUL`**, an invitation-verified greeting, two different members, and **`오늘의 서버 검증 기록 2건`**. This is user-supplied visual evidence, not Work's browser automation trace. Screenshots are retained in the conversation and are not uploaded to the public GitHub repository; account display names are intentionally omitted here.
+
+| Observed position | Sanitized member | Browser result | Supabase reference | Comparison |
+| --- | --- | --- | --- | --- |
+| 1 | A | `00:57.28` | 57,280 ms | Match |
+| 2 | B | `01:12.86` | 72,864 ms | Match |
+
+**Database recheck:** The connected Supabase project independently returned exactly those **two** rows dated `2026-11-10`, ordered ascending by `elapsed_ms`. Both rows had `command_count=10`, `verification_version=server-events-v1`, and active invitation memberships. This read-only query made no data changes.
+
+| Acceptance requirement | Verdict | Grounding |
+| --- | --- | --- |
+| Both distinct invited users rendered together in the same browser leaderboard | **PASS** | Both screenshots visibly show two separate player rows |
+| Correct ascending ordering by official time | **PASS** | Row 1: 57,280 ms; Row 2: 72,864 ms |
+| Browser times correspond to server's official records | **PASS** | Values matched direct Supabase readback |
+| Two consecutive captures retain the same order, rows and count | **PASS** | Both provided screenshots visibly identical for relevant data |
+| Explicit browser refresh action independently instrumented | **NOT INDEPENDENTLY OBSERVED** | User supplied before/after captures in response to the refresh instructions; a still screenshot cannot itself prove the reload event. If strict instrumented confirmation is required, a browser trace or user confirmation is needed |
+| Clean, newly authenticated session (not a new tab sharing existing session) | **NOT TESTED** | Neither screenshot proves a new isolated browser authentication |
+| Two-user visual layout at the pictured desktop viewport | **PASS** | No row overlap or clipping visible in provided captures |
+| All prescribed desktop viewports and Night theme | **PARTIAL** | Not captured for this follow-up |
+
+**Updated functional verdict:** **PASS** for Phase 3's core multi-user Daily Leaderboard user-acceptance requirement (two genuinely invited accounts, server persistence, correct same-day ordering, and shared authorized display). **Full Phase 3 negative-security, fresh-session, exact-viewport and cross-day regression coverage remains PARTIAL.** The new evidence does not retroactively turn unexecuted tests into PASS.
+
+**Release boundary:** Documentation update only in `feature/server-verified-ranking-phase3`. No credential exposure, account changes, Supabase writes, GitHub `main` changes, or Vercel Production release.
